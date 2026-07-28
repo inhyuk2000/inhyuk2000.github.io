@@ -48,7 +48,7 @@ sections:
     id: projects
     content:
       title: "프로젝트"
-      subtitle: "배우고 쌓아온 것들"
+      subtitle: "그동안 배우고 쌓아온 경험들"
       count: 0
       filters:
         folders:
@@ -81,49 +81,39 @@ sections:
   - block: tech-stack
     id: skills
     content:
-      title: "Tech Stack"
-      subtitle: "Technologies I use to build things"
+      title: "기술 스택"
+      subtitle: "Hard Skills"
       categories:
-        - name: Languages
+        - name: Programming Languages
           items:
-            - name: TypeScript
-              icon: devicon/typescript
-            - name: JavaScript
-              icon: devicon/javascript
             - name: Python
               icon: devicon/python
-            - name: Go
-              icon: devicon/go
-        - name: Frontend
+            - name: JavaScript
+              icon: devicon/javascript
+            - name: C++
+              icon: devicon/cplusplus
+            - name: MySQL
+              icon: devicon/mysql
+        - name: AI / Data
           items:
-            - name: React
-              icon: devicon/react
-            - name: Next.js
-              icon: devicon/nextjs
-            - name: Tailwind CSS
-              icon: devicon/tailwindcss
-            - name: Alpine.js
-              icon: devicon/alpinejs
-        - name: Backend
+            - name: PyTorch
+              icon: devicon/pytorch
+            - name: Scikit-Learn
+              icon: devicon/scikitlearn
+            - name: Pandas
+              icon: devicon/pandas
+            - name: Numpy
+              icon: devicon/numpy
+        - name: LLM Engineering & DevOps
           items:
-            - name: Node.js
-              icon: devicon/nodejs
-            - name: Express
-              icon: devicon/express
-            - name: PostgreSQL
-              icon: devicon/postgresql
-            - name: Redis
-              icon: devicon/redis
-        - name: DevOps
-          items:
-            - name: Docker
-              icon: devicon/docker
-            - name: AWS
-              icon: devicon/amazonwebservices
+            - name: OpenAPI
+              icon: devicon/openapi
             - name: GitHub Actions
               icon: brands/github
-            - name: Vercel
-              icon: devicon/vercel
+            - name: AWS
+              icon: devicon/amazonwebservices
+            - name: Babel
+              icon: devicon/babel
     design:
       style: grid
       show_levels: false
@@ -213,12 +203,11 @@ sections:
   - block: contact-info
     id: contact
     content:
-      title: Get In Touch
-      subtitle: "Let's build something amazing together"
+      title: Contact
+      subtitle: "많은 관심 부탁드립니다 😊"
       text: |-
-        I'm always interested in hearing about new projects and opportunities.
-        Whether you're looking to hire, collaborate, or just want to say hi, feel free to reach out!
-      email: alex@example.com
+        데이터 분석, AI • LLM, HCI 및 제품 중심 프로젝트에서 협업하고 싶습니다. 관심 있으시면 언제든 연락 부탁드립니다!
+      email: thddlsgur0105@khu.ac.kr
       autolink: true
     design:
       columns: '1'
@@ -232,11 +221,9 @@ sections:
   # CTA Card
   - block: cta-card
     content:
-      title: "Open to Opportunities"
+      title: "In Hyuk's CV"
       text: |-
-        I'm currently looking for **senior engineering** or **tech lead** roles.
-        
-        Let's connect and discuss how I can help your team.
+        배움을 목말라하고 항상 겸손하게 배우고 <br/> 이를 통해 더욱 성장하는 것을 지향하며 살고 있습니다.
       button:
         text: 'Download Resume'
         url: uploads/resume.pdf

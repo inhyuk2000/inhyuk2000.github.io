@@ -1,170 +1,45 @@
 ---
-title: "블록체인 기반 이미지 거래 서비스"
-date: 2024-09-20
-summary: "블록체인 기반 이미지 거래 서비스"
-tags:
-  - Full-Stack
-  - Next.js
-  - Real-Time
-  - Productivity
+title: "블록체인을 활용한 신뢰 기반 이미지 거래 서비스, BlockSnap"
+date: 2025-07-15
+summary: "블록체인 기반으로 이미지 진위 여부를 검증하고, 신뢰 기반 거래 환경을 구축합니다."
+tags: 
+  - 수업
+  - 팀
+  - 프로젝트
 tech_stack:
-  - Next.js
-  - TypeScript
-  - Prisma
-  - PostgreSQL
-  - WebSockets
-  - Tailwind CSS
+  - Flutter
+  - Hash Algorithms
+  - MetaMask
+  - Smart Contract
+  - Notion
+  - Github
 links:
   - type: github
-    url: https://github.com/alexjohnson/taskflow
+    url: https://github.com/HuhJunny/blockchain_true_image_app
     label: Code
-  - type: live
-    url: https://taskflow-demo.example.com
-    label: Demo
+  - type: paper
+    url: https://drive.google.com/file/d/1CPt-9khFtUVktb-fvT-h_QIp4cXdJLIS/view?usp=sharing
+    label: ppt
 featured: true
 status: "Live"
-role: "Solo Developer"
-duration: "2 months"
-team_size: 1
+role: "Backend 담당"
+duration: "3 months"
+team_size: 4
 highlights:
-  - "Real-time collaboration with WebSockets"
-  - "2000+ active users"
-  - "Featured on Product Hunt"
+  - "Handles 10k+ concurrent users"
+  - "99.9% uptime SLA"
+  - "Processing $50k+ monthly transactions"
+  - "60% faster page load vs competitors"
 ---
 
-A modern, intuitive task management tool built for remote teams. Features real-time collaboration, customizable workflows, and beautiful UI.
+### 설명
+- **프로젝트 이름** : 신뢰 기반 이미지 거래 서비스, BlockSnap
+- **프로젝트 기간** : 2026.03 ~ 2026.06
+- **프로젝트 설명** : 블록체인의 온체인에 이미지 메타데이터를 등록해 위조가 불가능한 이미지 데이터를 생성하고, 이를 거래할 수 있는 서비스
+- **프로젝트 목적** : AI로 생성된 이미지가 굉장히 많아, 구별이 힘든 삶을 살아가고 있는 상황 속에서 검증된 이미지를 통해 사용자를 안심시켜주기 위함
+- **프로젝트 성과** : 이미지 거래 서비스 개발
 
-## Overview
+<br/>
 
-TaskFlow was born out of frustration with existing project management tools being either too complex or lacking essential features. I built a solution that's powerful yet simple to use.
-
-## Key Features
-
-### Core Functionality
-- **Kanban Boards** - Drag-and-drop interface for visual task management
-- **Real-Time Sync** - See changes instantly as team members update tasks
-- **Multiple Views** - Switch between Kanban, List, and Calendar views
-- **Task Details** - Rich descriptions, attachments, comments, and checklists
-- **Labels & Filters** - Organize and find tasks quickly
-
-### Collaboration
-- **Team Workspaces** - Separate spaces for different projects/teams
-- **@Mentions** - Tag team members in comments for notifications
-- **Activity Feed** - Track all changes and updates
-- **Permissions** - Role-based access control (admin, member, viewer)
-
-### Productivity
-- **Keyboard Shortcuts** - Power user features for faster navigation
-- **Templates** - Reusable board templates for common workflows
-- **Due Dates & Reminders** - Never miss a deadline
-- **Time Tracking** - Built-in timer for task duration tracking
-
-## Technical Implementation
-
-### Real-Time Features
-Used WebSockets (Socket.io) for instant updates across all connected clients. Implemented optimistic UI updates for snappy user experience even before server confirmation.
-
-### Drag & Drop
-Built custom drag-and-drop using react-beautiful-dnd with smooth animations and mobile touch support.
-
-### Performance
-- Implemented virtual scrolling for boards with 1000+ tasks
-- Optimized database queries with proper indexing
-- Used Redis for session storage and caching
-- Image optimization with Next.js Image component
-
-### Authentication
-- Secure auth with NextAuth.js
-- Support for email/password and OAuth (Google, GitHub)
-- JWT tokens with automatic refresh
-
-## Architecture
-
-Built as a modern monolith with Next.js API routes:
-
-```
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│  Next.js    │────▶│   API Routes │────▶│ PostgreSQL  │
-│  (React)    │     │  (REST/WS)   │     │  + Prisma   │
-└─────────────┘     └──────────────┘     └─────────────┘
-       │                    │
-       │             ┌──────▼───────┐
-       └────────────▶│  Socket.io   │
-                     │  (Real-Time) │
-                     └──────────────┘
-```
-
-## Challenges Solved
-
-### Real-Time Conflicts
-**Problem**: Multiple users editing same task simultaneously
-
-**Solution**: Implemented operational transformation (OT) for conflict resolution and last-write-wins strategy with conflict notifications
-
-### Mobile Performance
-**Problem**: Drag-and-drop laggy on mobile devices
-
-**Solution**: Optimized touch handlers and reduced re-renders using React.memo and useMemo
-
-### Scale
-**Problem**: Growing user base causing performance issues
-
-**Solution**: Added Redis caching layer and optimized database queries, reducing response time by 65%
-
-## Results
-
-- 📈 **Users**: 2000+ active users within 3 months
-- ⭐ **Product Hunt**: Featured and received 200+ upvotes
-- 🚀 **Performance**: Sub-100ms API response times
-- 💯 **Uptime**: 99.8% uptime since launch
-- 📱 **Mobile**: 40% of traffic from mobile devices
-
-## Tech Stack
-
-**Frontend**
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Framer Motion (animations)
-- React Beautiful DnD
-
-**Backend**
-- Next.js API Routes
-- Prisma ORM
-- PostgreSQL
-- Socket.io for WebSockets
-- NextAuth.js for authentication
-
-**Infrastructure**
-- Vercel for hosting
-- Supabase for PostgreSQL
-- Redis Cloud for caching
-- AWS S3 for file storage
-
-## User Feedback
-
-> "Finally, a task manager that doesn't get in my way. The real-time updates are magical!" - Sarah K., Product Manager
-
-> "We switched from Trello and haven't looked back. TaskFlow is faster and more intuitive." - Mike R., Engineering Lead
-
-## Open Source
-
-TaskFlow is open source! Contributions welcome.
-
-**License**: MIT  
-**GitHub**: [alexjohnson/taskflow](https://github.com/alexjohnson/taskflow)  
-**Demo**: [Try it live](https://taskflow-demo.example.com)
-
-## What's Next
-
-Currently working on:
-- [ ] Mobile apps (iOS & Android)
-- [ ] Gantt chart view
-- [ ] Advanced reporting and analytics
-- [ ] API for third-party integrations
-- [ ] Offline mode support
-
----
-
-**Status**: ✅ Live & Actively Maintained  
-**Try it**: [taskflow-demo.example.com](https://taskflow-demo.example.com)
+### 프로젝트를 진행하며 느낀점
+백엔드 파트를 맡고 프론트 팀과 스마트 컨트랙트 팀과 협업하면서, 협업 활동에서 얻을 수 있는 좋은 경험을 한 것 같습니다. 처음 각 파트의 팀원들이 서로 생각을 공유할 수 있도록, API 명세서를 최대한 자세하게 만들었고 이 과정은 힘이 드는 과정이었으나 후반부에 프로젝트 진행 속도를 붙여주는 데에 큰 기여를 했습니다. 이미지 해시를 활용한 유사도 검증 부분을 백엔드 로직에서 작성했고, 이 과정에서 많은 어려움을 겪으며 API 명세를 더욱 구체적으로 작성해 정확한 문제 지점과 해결 포인트를 정리해두는 것이 중요하다는 것을 느꼈던 시간이었습니다.

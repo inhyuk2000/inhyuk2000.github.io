@@ -6,7 +6,7 @@
 
 ## 🔗 Website
 
-🌐 [포트폴리오 웹사이트 바로가기](https://inhyuk2000.github.io/website/)
+🌐 [포트폴리오 웹사이트 바로가기](https://inhyuk2000.github.io/)
 
 <br/>
 

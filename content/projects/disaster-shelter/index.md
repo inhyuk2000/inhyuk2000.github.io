@@ -1,7 +1,7 @@
 ---
-title: "TaskFlow - Project Management Tool"
+title: "공간 데이터 기반 재난 임시주거시설 최적 후보지 추천 시스템 개발"
 date: 2024-09-20
-summary: "Real-time collaborative task management application with drag-and-drop Kanban boards and team features"
+summary: " 재난 상황에서 이재민의 안전한 대피와 장기 체류를 지원하기 위한 데이터 기반 추가 임시주거시설 추천 시스템 개발"
 tags:
   - Full-Stack
   - Next.js

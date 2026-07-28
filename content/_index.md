@@ -1,8 +1,8 @@
 ---
 # Leave the homepage title empty to use the site title
-title: ''
-summary: ''
-date: 2026-01-05
+title: 'In Hyuk Portfolio Homepage'
+summary: '송인혁의 개인 웹사이트'
+# date: 2026-01-28
 type: landing
 
 sections:
@@ -18,10 +18,10 @@ sections:
         enable: true
         prefix: "I build"
         strings:
-          - "full-stack web apps"
-          - "scalable APIs"
-          - "beautiful UIs"
-          - "open source tools"
+          - "LLM based data analysis systems"
+          - "AI-powered software"
+          - "LLM-powered applications"
+          - "intelligent data analysis tools"
         type_speed: 70
         delete_speed: 40
         pause_time: 2500
@@ -47,8 +47,8 @@ sections:
   - block: portfolio
     id: projects
     content:
-      title: "Featured Projects"
-      subtitle: "A selection of my recent work"
+      title: "프로젝트"
+      subtitle: "배우고 쌓아온 것들"
       count: 0
       filters:
         folders:
@@ -56,16 +56,16 @@ sections:
       buttons:
         - name: All
           tag: '*'
-        - name: Full-Stack
-          tag: Full-Stack
-        - name: Frontend
-          tag: Frontend
-        - name: Backend
-          tag: Backend
+        - name: 학회
+          tag: 학회
+        - name: 팀
+          tag: 팀
+        - name: 개인
+          tag: 개인
       default_button_index: 0
       # Archive link auto-shown if more projects exist than 'count' above
       # archive:
-      #   enable: false  # Set to false to explicitly hide
+      #   # enable: false  # Set to false to explicitly hide
       #   text: "Browse All"  # Customize text
       #   link: "/work/"  # Custom URL
     design:

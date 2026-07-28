@@ -2,75 +2,103 @@ schema: hugoblox/author/v1
 slug: me
 is_owner: true
 name:
-  display: Alex Johnson
-  given: Alex
-  family: Johnson
+  display: In Hyuk
+  given: Daniel
+  family: Daniel
 postnominals: []
 status:
-  icon: "💻"  # Emoji shown on avatar badge: 💻 developer, 🎨 designer, 🚀 startup, 🔬 researcher, 🎓 student
-role: Full-Stack Developer
-email: alex@example.com
+  icon: "🎓"  # Emoji shown on avatar badge: 💻 developer, 🎨 designer, 🚀 startup, 🔬 researcher, 🎓 student
+role: Data Analyst
+email: thddlsgur0105@khu.ac.kr
 bio: |
-  Full-stack developer with 5+ years of experience building scalable web applications.
-  Passionate about modern JavaScript, cloud architecture, and creating delightful user experiences.
+  **데이터**와 **AI**를 통해 가치를 만드는 것을 좋아합니다. <br/> **LLM**을 활용한 서비스로 가치를 창출 및 **유저 데이터 분석**에 관심이 있습니다. 
 
 affiliations:
-  - name: Tech Corp
-    url: https://techcorp.example.com
+  - name: Kyung Hee Univ. (School of Computing)
+    url: https://ce.khu.ac.kr/ce25/user/main/view.do
 
 links:
   - icon: at-symbol
-    url: mailto:alex@example.com
-    label: E-mail Me
+    url: thddlsgur0105@khu.ac.kr
+    label: E-mail Me!
   - icon: brands/github
-    url: https://github.com/alexjohnson
+    url: https://github.com/inhyuk2000
   - icon: brands/linkedin
-    url: https://www.linkedin.com/in/alexjohnson/
-  - icon: brands/x
-    url: https://x.com/alexjohnson
+    url: https://www.linkedin.com/in/inhyuksong0105/
+  # - icon: brands/x
+  #   url: https://x.com/alexjohnson
 
 interests:
-  - Web Development
-  - Cloud Architecture
-  - Open Source
-  - Developer Experience
+  - LLM
+  - HCI
+  - Data Analysis
+  - Hard Work And Growth
 
 education:
-  - degree: B.S. Computer Science
-    institution: State University
-    start: 2015-09-01
-    end: 2019-05-31
+  - degree: 컴퓨터공학과 학사
+    institution: 경희대학교
+    start: 2021-09-01
+    end: 2026-08-31
     summary: |
-      Focus on software engineering and distributed systems.
-      Senior project on distributed caching systems.
+      소프트웨어 공학과 LLM 기반 데이터 분석을 중심으로 연구 및 프로젝트를 수행해 왔습니다. <br/> 🎓 졸업 프로젝트 : **멀티 LLM RAG 교차 검증을 통한 생성 단계의 근거 귀속 환각 탐지**
     button:
-      text: View Project
-      url: https://github.com/alexjohnson/senior-project
+      text: View Graduation Project
+      url: https://github.com/inhyuk2000/A-Multi-LLM-Cross-Verification-Framework-for-Attribution-Hallucination-Detection-in-RAG-Generation
       icon: brands/github
+  - degree: 기계공학과
+    institution: 경희대학교
+    start: 2020-03-01
+    end: 2021-08-31
+    summary: |
+      수학과 물리학에 대한 관심을 키워 물리적 기계를 다루는 기계공학도 1년간의 시간을 보냈습니다.
+  - degree: 인문계 졸업
+    institution: 동백고등학교
+    start: 2015-03-01
+    end: 2018-02-31
+    summary: |
+      학창 시절 유독 공부에 관심이 많았고, 특히 수학과 과학(물리학)을 좋아했습니다.
 
 experience:
-  - role: Senior Software Engineer
-    org: Tech Corp
-    start: 2023-01-01
+  - role: 학부연구생
+    org: User Experience Lab 연구실
+    start: 2024-12-01
+    end: 2025-12-31
     summary: |
-      Lead development of microservices architecture serving 1M+ users.
-      Improved API response time by 40% through optimization.
-      Mentored team of 5 junior developers.
-  - role: Full-Stack Developer
-    org: Startup Inc
-    start: 2021-06-01
-    end: 2022-12-31
+      약 1년 간 사용자 경험 연구실에서 학부연구생으로 활동하면서, 총 2편의 논문을 작성했습니다. 데이터 분석에 있어서 문제 정의를 통한 아이디어의 구체화가 정말 소중한 과정이고, 이후 분석 단계에서 정말 큰 나비 효과를 미치는 중요한 과정임을 깨달았습니다. 연구실에서의 생활은 데이터 분석에 대한 시각을 바꿔주게 된 소중한 경험이었습니다.
+    button:
+      text: UXC LAB
+      url: https://uxc.khu.ac.kr/
+      icon: brands/google
+  - role: 데이터비즈니스 팀 6기
+    org: KHUDA 데이터분석 학술동아리
+    start: 2024-07-01
+    end: 2024-12-31
     summary: |
-      Built and deployed 3 production applications from scratch.
-      Implemented CI/CD pipeline reducing deployment time by 60%.
-      Led migration from monolith to microservices architecture.
-  - role: Junior Developer
-    org: Web Agency
-    start: 2020-01-01
-    end: 2021-05-31
+      뛰어난 학우들과 고민하고 데이터를 분석하면서, 실전 데이터 분석에 대한 경험을 쌓을 수 있는 좋은 시간이었습니다. 프로젝트를 진행하면서 다양한 팀원들을 만나다보니, 더 나은 PPT를 제작하는 능력도 함께 갖출 수 있었습니다. 교내 데이터톤(3위), 토이 프로젝트 개발(1위) 등을 진행하며 뜻깊은 결과도 얻을 수 있었습니다.
+    button:
+      text: KHUDA
+      url: https://www.khuda.co.kr/
+      icon: brands/google
+  - role: 페이서 및 기획부원 (운영진)
+    org: KHUMA 경희대 마라톤 동아리
+    start: 2023-09-01
+    end: 2024-11-31
     summary: |
-      Developed client websites using React and modern web technologies.
-      Participated in code reviews and agile ceremonies.
+      타 단과대 학우들도 많이 사귀고 함께 러닝하면서 건강해질 수 있어서 행복했던 시간이었습니다. 깊은 관계의 좋은 친구들도 많이 사귀었고, 운영진으로서 동아리 활동 전반을 기획하고 주도해보는 뜻깊은 경험도 해보았습니다.
+    button:
+      text: KHUMA
+      url: https://www.instagram.com/khuma_running/
+      icon: brands/instagram
+  - role: 동아리 부원
+    org: KHULUG 경희대 개발동아리
+    start: 2020-05-01
+    end: 2020-12-31
+    summary: |
+      기계공학도 시절, 개발에 대한 순수한 재미를 느껴 활동했던 동아리입니다. 그 당시에는 개발에 대해 잘 몰라, 조금 버겁기도 했지만 지나고 보니 저를 많이 성장시켜준 것 같습니다.
+    button:
+      text: KHULUG
+      url: https://www.khlug.org/
+      icon: brands/google
 
 skills:
   - name: Development
@@ -97,4 +125,4 @@ languages:
     level: 5
     label: Native
 
-awards: []
+awards: ['Best Poster Award (KCC2025)', 'Encouragement Award (KCC2025)', 'Paper Accept (KSC2025)']

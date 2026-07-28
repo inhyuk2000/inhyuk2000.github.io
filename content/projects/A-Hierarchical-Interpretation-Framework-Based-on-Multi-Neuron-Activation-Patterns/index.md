@@ -1,7 +1,7 @@
 ---
-title: "WeatherNow - Real-Time Weather App"
+title: "딥러닝 해석을 위한 계층적 다중 뉴런 프레임워크 모델 개발"
 date: 2024-06-10
-summary: "Beautiful weather application with real-time data, 7-day forecasts, and interactive maps"
+summary: "사전 라벨이 없는 이미지 데이터를 의미 단위로 계층화하고, 각 이미지 그룹에 공통으로 반응하는 다중 뉴런을 추출해 딥러닝 모델의 내부 의미 구조를 자연어로 설명하는 자동 해석 프레임워크"
 tags:
   - Frontend
   - React

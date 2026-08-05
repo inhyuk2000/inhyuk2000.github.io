@@ -32,4 +32,4 @@ highlights:
   - "Featured on Product Hunt"
 ---
 
-정리 예정
+> [!WARNING] 정리예정입니다.

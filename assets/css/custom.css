@@ -1,0 +1,14 @@
+/* Marker-style highlight — tuned for dark blog (with light fallback) */
+.high-mark {
+  background-image: linear-gradient(transparent 48%, rgba(212, 160, 50, 0.48) 48%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  padding: 0 0.08em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Light mode: classic highlighter */
+html:not(.dark) .high-mark {
+  background-image: linear-gradient(transparent 48%, #ffe566 48%);
+}

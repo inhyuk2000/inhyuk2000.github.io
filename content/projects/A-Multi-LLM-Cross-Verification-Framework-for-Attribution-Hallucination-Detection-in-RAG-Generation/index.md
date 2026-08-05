@@ -25,7 +25,7 @@ links:
     url: https://drive.google.com/file/d/1lJwaTsDuXqUsFMLFv8uWvke54X24SNsS/view
     label: Paper
 featured: true
-status: "Live"
+status: "Hold"
 role: "프로젝트 전체 담당 및 논문 작성"
 duration: "4 months"
 team_size: 1

@@ -23,6 +23,22 @@ mounts:
     target: assets/dist/community/blox/
     files:
       - '**.css'
+  # Local custom blocks (HBX)
+  - source: blox
+    target: layouts/_partials/hbx/blocks
+    files:
+      - '**/block.html'
+  - source: blox
+    target: assets/js/hbx/blocks
+    files:
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.jsx'
+      - '**/*.tsx'
+  - source: blox
+    target: assets/css/hbx/blocks
+    files:
+      - '**/*.css'
   - source: layouts
     target: layouts
   - source: assets

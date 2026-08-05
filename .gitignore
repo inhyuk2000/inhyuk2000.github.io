@@ -15,6 +15,9 @@ resources/
 # Hugo build lock
 .hugo_build.lock
 
+# Vendored Hugo modules (local only)
+_vendor/
+
 # Hugo stats
 hugo_stats.json
 

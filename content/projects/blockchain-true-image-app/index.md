@@ -21,7 +21,7 @@ links:
     url: https://drive.google.com/file/d/1CPt-9khFtUVktb-fvT-h_QIp4cXdJLIS/view?usp=sharing
     label: ppt
 featured: true
-status: "Live"
+status: "Done"
 role: "Backend 담당"
 duration: "3 months"
 team_size: 4

@@ -22,7 +22,7 @@ links:
     url: https://taskflow-demo.example.com
     label: Demo
 featured: true
-status: "Live"
+status: "Done"
 role: "Solo Developer"
 duration: "2 months"
 team_size: 1

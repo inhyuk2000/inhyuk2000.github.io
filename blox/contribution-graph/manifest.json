@@ -1,0 +1,10 @@
+{
+  "id": "contribution-graph",
+  "name": "Contribution Graph",
+  "version": "1.0.0",
+  "license": "MIT",
+  "category": "content",
+  "tags": ["blog", "contribution", "github", "heatmap", "study-log"],
+  "description": "GitHub-style contribution heatmap driven by blog post dates, with interactive day selection and recent activity.",
+  "author": "In Hyuk"
+}

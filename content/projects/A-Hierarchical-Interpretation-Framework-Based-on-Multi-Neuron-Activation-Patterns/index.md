@@ -30,7 +30,7 @@ links:
     url: https://drive.google.com/file/d/1aU-uae0jrcig558qPGx4nDtew1k7Hyrt/view
     label: Award
 featured: true
-status: "Live"
+status: "Done"
 role: "논문 공동 저자"
 duration: "4 months"
 team_size: 3

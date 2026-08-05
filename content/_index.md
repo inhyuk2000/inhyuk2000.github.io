@@ -176,22 +176,17 @@ sections:
       spacing:
         padding: ["4rem", "0", "4rem", "0"]
   
-  # Recent Blog Posts
-  - block: collection
+  # Study log — GitHub-style contribution graph of blog posts
+  - block: contribution-graph
     id: blog
     content:
-      title: Recent Posts
-      subtitle: 'Thoughts on web development, tech, and more'
-      text: ''
+      title: Study Log
+      subtitle: '매일 쌓아가는 공부 · 코딩 테스트 · 프로젝트 기록'
       filters:
         folders:
           - blog
-        exclude_featured: false
-      count: 3
-      order: desc
+      recent_count: 5
     design:
-      view: card
-      columns: 3
       background:
         color:
           light: "#f5f5f5"

@@ -1,0 +1,332 @@
+{{/* Hugo Blox: Contribution Graph (GitHub-style study log) */}}
+{{/* Replaces Recent Posts with a contribution heatmap driven by blog post dates. */}}
+
+{{ $page := .wcPage }}
+{{ $block := .wcBlock }}
+{{ $content := $block.content }}
+{{ if not (reflect.IsMap $content) }}{{ $content = dict }}{{ end }}
+{{ $design := $block.design }}
+{{ if not (reflect.IsMap $design) }}{{ $design = dict }}{{ end }}
+
+{{ $page.Store.Set "has_alpine" true }}
+
+{{/* ---- Query blog posts ---- */}}
+{{ $folders_raw := index (index $content "filters" | default dict) "folders" }}
+{{ $folders := slice }}
+{{ if reflect.IsSlice $folders_raw }}
+  {{ range $folders_raw }}
+    {{ $folder := strings.TrimSpace (printf "%v" .) }}
+    {{ if $folder }}{{ $folders = $folders | append $folder }}{{ end }}
+  {{ end }}
+{{ else if eq (printf "%T" $folders_raw) "string" }}
+  {{ $folder := strings.TrimSpace $folders_raw }}
+  {{ if $folder }}{{ $folders = slice $folder }}{{ end }}
+{{ end }}
+{{ if eq (len $folders) 0 }}{{ $folders = slice "blog" }}{{ end }}
+
+{{ $query := where site.RegularPages "Section" "in" $folders }}
+{{ $query = sort $query "Date" "desc" }}
+
+{{/* Group posts by date key YYYY-MM-DD */}}
+{{ $postsByDate := dict }}
+{{ $postItems := slice }}
+{{ range $query }}
+  {{ $key := .Date.Format "2006-01-02" }}
+  {{ $item := dict
+      "title" .Title
+      "url" .RelPermalink
+      "summary" (.Params.summary | default (.Summary | plainify | truncate 120))
+      "date" $key
+      "dateLabel" (.Date.Format "Jan 2, 2006")
+  }}
+  {{ $postItems = $postItems | append $item }}
+  {{ $existing := index $postsByDate $key | default slice }}
+  {{ $postsByDate = merge $postsByDate (dict $key ($existing | append $item)) }}
+{{ end }}
+
+{{/* ---- Build 53-week calendar (Sun–Sat), ending this week ---- */}}
+{{ $today := now }}
+{{ $todayKey := $today.Format "2006-01-02" }}
+{{ $weekday := int $today.Weekday }}
+{{ $daysUntilSat := sub 6 $weekday }}
+{{ $end := $today.AddDate 0 0 $daysUntilSat }}
+{{ $start := $end.AddDate 0 0 -370 }}
+
+{{ $weeks := slice }}
+{{ $monthLabels := slice }}
+{{ $prevMonth := "" }}
+{{ $totalPosts := 0 }}
+{{ $activeDays := 0 }}
+
+{{ range $weekIdx := seq 0 52 }}
+  {{ $weekStart := $start.AddDate 0 0 (mul $weekIdx 7) }}
+  {{ $month := $weekStart.Format "Jan" }}
+  {{ if ne $month $prevMonth }}
+    {{ $monthLabels = $monthLabels | append (dict "label" $month "week" $weekIdx) }}
+    {{ $prevMonth = $month }}
+  {{ end }}
+
+  {{ $days := slice }}
+  {{ range $dayIdx := seq 0 6 }}
+    {{ $date := $weekStart.AddDate 0 0 $dayIdx }}
+    {{ $key := $date.Format "2006-01-02" }}
+    {{ $isFuture := gt $date.Unix $today.Unix }}
+    {{ $dayPosts := index $postsByDate $key | default slice }}
+    {{ $count := cond $isFuture 0 (len $dayPosts) }}
+    {{ if and (not $isFuture) (gt $count 0) }}
+      {{ $totalPosts = add $totalPosts $count }}
+      {{ $activeDays = add $activeDays 1 }}
+    {{ end }}
+    {{ $level := 0 }}
+    {{ if $isFuture }}
+      {{ $level = -1 }}
+    {{ else if ge $count 4 }}
+      {{ $level = 4 }}
+    {{ else if eq $count 3 }}
+      {{ $level = 3 }}
+    {{ else if eq $count 2 }}
+      {{ $level = 2 }}
+    {{ else if eq $count 1 }}
+      {{ $level = 1 }}
+    {{ end }}
+    {{ $days = $days | append (dict
+        "key" $key
+        "label" ($date.Format "January 2, 2006")
+        "count" $count
+        "level" $level
+        "future" $isFuture
+        "posts" $dayPosts
+      ) }}
+  {{ end }}
+  {{ $weeks = $weeks | append (dict "days" $days) }}
+{{ end }}
+
+{{ $title := "" }}
+{{ with index $content "title" }}{{ $title = strings.TrimSpace (printf "%v" .) }}{{ end }}
+{{ if not $title }}{{ $title = "Study Log" }}{{ end }}
+
+{{ $subtitle := "" }}
+{{ with index $content "subtitle" }}{{ $subtitle = strings.TrimSpace (printf "%v" .) }}{{ end }}
+
+{{ $archive_page := site.GetPage "Section" (index $folders 0) }}
+{{ $archive_link := "" }}
+{{ with $archive_page }}{{ $archive_link = .RelPermalink }}{{ end }}
+
+{{ $recentLimit := partial "functions/coerce_int" (dict "value" (index $content "recent_count") "default" 5 "min" 1 "max" 20) }}
+{{ $recentPosts := first $recentLimit $postItems }}
+
+{{ $payload := dict
+    "postsByDate" $postsByDate
+    "recent" $recentPosts
+    "today" $todayKey
+}}
+{{ $payloadB64 := $payload | jsonify | base64Encode }}
+{{ $rootId := $block.id | default "blog" }}
+
+<div
+  class="cg-block mx-auto w-full max-w-5xl px-4 sm:px-6"
+  data-cg-payload="{{ $payloadB64 }}"
+  x-data="contributionGraph()"
+  x-init="initFromBase64($el.dataset.cgPayload)"
+  @keydown.escape.window="clearSelection()"
+>
+  {{/* Section header */}}
+  <div class="mb-8 text-center">
+    <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $title | emojify | $page.RenderString }}</h2>
+    {{ with $subtitle }}
+      <p class="mt-2 text-base text-gray-600 dark:text-gray-400">{{ . | emojify | $page.RenderString }}</p>
+    {{ end }}
+  </div>
+
+  {{/* GitHub-style contribution card */}}
+  <div class="cg-card">
+    <div class="cg-card-header">
+      <h3 class="cg-card-title">
+        <span class="cg-count">{{ $totalPosts }}</span>
+        {{ if eq $totalPosts 1 }}post{{ else }}posts{{ end }}
+        in the last year
+      </h3>
+      <div class="cg-card-meta">
+        <span>{{ $activeDays }} active day{{ if ne $activeDays 1 }}s{{ end }}</span>
+        {{ with $archive_link }}
+          <a class="cg-archive-link" href="{{ . }}">View all posts</a>
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="cg-graph-scroll">
+      <div class="cg-graph" role="grid" aria-label="Post contribution calendar">
+        {{/* Month labels */}}
+        <div class="cg-months" aria-hidden="true">
+          <div class="cg-day-spacer"></div>
+          <div class="cg-months-track">
+            {{ range $monthLabels }}
+              <span class="cg-month" style="grid-column: {{ add .week 1 }}">{{ .label }}</span>
+            {{ end }}
+          </div>
+        </div>
+
+        <div class="cg-body">
+          <div class="cg-days" aria-hidden="true">
+            <span></span>
+            <span>Mon</span>
+            <span></span>
+            <span>Wed</span>
+            <span></span>
+            <span>Fri</span>
+            <span></span>
+          </div>
+
+          <div class="cg-weeks">
+            {{ range $weeks }}
+              <div class="cg-week">
+                {{ range .days }}
+                  {{ if .future }}
+                    <span
+                      class="cg-cell cg-level-empty"
+                      aria-hidden="true"
+                    ></span>
+                  {{ else }}
+                    <button
+                      type="button"
+                      class="cg-cell cg-level-{{ .level }}"
+                      :class="{ 'cg-cell-selected': selected === '{{ .key }}' }"
+                      data-date="{{ .key }}"
+                      data-count="{{ .count }}"
+                      data-label="{{ .label }}"
+                      aria-label="{{ if eq .count 0 }}No posts{{ else if eq .count 1 }}1 post{{ else }}{{ .count }} posts{{ end }} on {{ .label }}"
+                      @mouseenter="showTip($event)"
+                      @mouseleave="hideTip()"
+                      @focus="showTip($event)"
+                      @blur="hideTip()"
+                      @click="selectDay('{{ .key }}')"
+                    ></button>
+                  {{ end }}
+                {{ end }}
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cg-legend">
+      <a class="cg-learn-link" {{ with $archive_link }}href="{{ . }}"{{ else }}href="/blog/"{{ end }}>Learn how we count posts</a>
+      <div class="cg-legend-scale" aria-hidden="true">
+        <span>Less</span>
+        <span class="cg-cell cg-level-0"></span>
+        <span class="cg-cell cg-level-1"></span>
+        <span class="cg-cell cg-level-2"></span>
+        <span class="cg-cell cg-level-3"></span>
+        <span class="cg-cell cg-level-4"></span>
+        <span>More</span>
+      </div>
+    </div>
+  </div>
+
+  {{/* Tooltip */}}
+  <div
+    class="cg-tooltip"
+    x-show="tip.show"
+    x-cloak
+    :style="`left:${tip.x}px; top:${tip.y}px`"
+    x-transition.opacity.duration.100ms
+  >
+    <strong x-text="tip.countText"></strong>
+    <span x-text="tip.dateText"></span>
+  </div>
+
+  {{/* Activity panel */}}
+  <div class="cg-activity">
+    <div class="cg-activity-header">
+      <h3 class="cg-activity-title" x-text="selected ? selectedLabel + ' posts' : 'Recent posts'"></h3>
+      <button
+        type="button"
+        class="cg-clear-btn"
+        x-show="selected"
+        x-cloak
+        @click="clearSelection()"
+      >
+        Show recent
+      </button>
+    </div>
+
+    <template x-if="visiblePosts.length === 0">
+      <p class="cg-empty">
+        <span x-show="selected">No posts on this day.</span>
+        <span x-show="!selected">No posts yet. Start writing your daily study log!</span>
+      </p>
+    </template>
+
+    <ul class="cg-post-list" x-show="visiblePosts.length > 0">
+      <template x-for="post in visiblePosts" :key="post.url">
+        <li class="cg-post-item">
+          <div class="cg-post-rail" aria-hidden="true"></div>
+          <div class="cg-post-body">
+            <time class="cg-post-date" x-text="post.dateLabel"></time>
+            <a class="cg-post-title" :href="post.url" x-text="post.title"></a>
+            <p class="cg-post-summary" x-show="post.summary" x-text="post.summary"></p>
+          </div>
+        </li>
+      </template>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function contributionGraph() {
+    return {
+      postsByDate: {},
+      recent: [],
+      selected: null,
+      selectedLabel: '',
+      tip: { show: false, x: 0, y: 0, countText: '', dateText: '' },
+      initFromBase64(b64) {
+        // atob() alone breaks UTF-8 (Korean); decode bytes with TextDecoder
+        const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+        const json = new TextDecoder('utf-8').decode(bytes);
+        let payload = {};
+        try {
+          payload = JSON.parse(json);
+          if (typeof payload === 'string') payload = JSON.parse(payload);
+        } catch (e) {
+          payload = {};
+        }
+        this.postsByDate = (payload && payload.postsByDate) || {};
+        this.recent = (payload && payload.recent) || [];
+      },
+      get visiblePosts() {
+        if (!this.selected) return this.recent;
+        return this.postsByDate[this.selected] || [];
+      },
+      selectDay(key) {
+        if (this.selected === key) {
+          this.clearSelection();
+          return;
+        }
+        this.selected = key;
+        const posts = this.postsByDate[key] || [];
+        this.selectedLabel = (posts[0] && posts[0].dateLabel) || key;
+        this.hideTip();
+      },
+      clearSelection() {
+        this.selected = null;
+        this.selectedLabel = '';
+      },
+      showTip(event) {
+        const el = event.currentTarget;
+        const count = Number(el.dataset.count || 0);
+        const label = el.dataset.label || '';
+        const rect = el.getBoundingClientRect();
+        this.tip.countText = count === 0 ? 'No posts' : count === 1 ? '1 post' : count + ' posts';
+        this.tip.dateText = ' on ' + label;
+        this.tip.x = rect.left + rect.width / 2;
+        this.tip.y = rect.top;
+        this.tip.show = true;
+      },
+      hideTip() {
+        this.tip.show = false;
+      },
+    };
+  }
+</script>

@@ -1,17 +1,32 @@
 ---
 title: "NotiLLM : LLM 기반 자연어 알림 전송 제어"
-date: 2026-08-03
+date: 2026-08-04
 summary: "자연어로 알림 수신 조건을 설정하고, LLM Function Calling으로 규칙을 추출해 Android에서 hold/deliver하는 시스템"
-tags:
+tags: 
+  - 개인
+  - 배포
+  - 서비스
+tech_stack:
   - Android
   - Kotlin
   - LLM
   - Function Calling
   - Notification
-  - KSC 2025
-authors:
-  - me
+  - Github
+links:
+  - type: github
+    url: https://github.com/inhyuk2000/A-Multi-Agent-Debate-Framework-of-Multiple-Language-Models-for-Hallucination-Detection-Correction
+    label: Code
 featured: true
+status: "Live"
+role: "서비스 개발자"
+duration: "1 months"
+team_size: 1
+highlights:
+  - "Handles 10k+ concurrent users"
+  - "99.9% uptime SLA"
+  - "Processing $50k+ monthly transactions"
+  - "60% faster page load vs competitors"
 ---
 
 알림을 앱마다 일일이 끄는 대신, **카톡만 받아줘** 혹은 **지금부터 1시간 조용히**처럼 말로 규칙을 만들고 실제 알림 흐름을 제어하는 시스템을 만들었습니다.

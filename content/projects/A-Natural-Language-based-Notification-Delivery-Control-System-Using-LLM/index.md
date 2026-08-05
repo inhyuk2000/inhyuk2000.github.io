@@ -30,7 +30,7 @@ links:
     url: https://drive.google.com/file/d/1WVwluJ32EkZljldSVt6CZtasL6YWRNNw/view
     label: Poster
 featured: true
-status: "Live"
+status: "Done"
 role: "논문 제 1저자"
 duration: "4 months"
 team_size: 2

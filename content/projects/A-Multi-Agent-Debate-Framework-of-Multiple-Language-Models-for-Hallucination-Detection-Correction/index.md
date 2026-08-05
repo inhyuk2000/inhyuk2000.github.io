@@ -28,7 +28,7 @@ links:
     url: https://drive.google.com/file/d/14KXFnR415BbbJ_B9oexl76601NYtoaFU/view
     label: Award
 featured: true
-status: "Live"
+status: "Hold"
 role: "논문 1저자"
 duration: "4 months"
 team_size: 2

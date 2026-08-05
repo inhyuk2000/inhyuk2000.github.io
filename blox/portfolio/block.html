@@ -254,16 +254,33 @@
       {{ end }}
       {{ $status_color_source := cond (ne $status "" ) $status $status_display }}
       {{ $status_norm := upper $status_color_source }}
-      {{/* Default: Live / active */}}
-      {{ $status_class := "bg-emerald-600 text-white border-emerald-500 shadow-md shadow-emerald-500/30 dark:bg-emerald-500 dark:border-emerald-400" }}
+      {{/* Status badge tone — colors live in assets/css/custom.css */}}
+      {{ $status_class := "portfolio-badge portfolio-badge-live" }}
       {{ if or (eq $status_norm "LIVE") (eq $status_norm "PUBLISHED") }}
-        {{ $status_class = "bg-emerald-600 text-white border-emerald-500 shadow-md shadow-emerald-500/30 dark:bg-emerald-500 dark:border-emerald-400" }}
+        {{ $status_class = "portfolio-badge portfolio-badge-live" }}
       {{ else if or (eq $status_norm "HOLD") (eq $status_norm "WIP") (eq $status_norm "IN PROGRESS") (eq $status_norm "PAUSED") }}
-        {{ $status_class = "bg-amber-500 text-white border-amber-400 shadow-md shadow-amber-400/30 dark:bg-amber-500 dark:border-amber-400" }}
+        {{ $status_class = "portfolio-badge portfolio-badge-hold" }}
       {{ else if or (eq $status_norm "DONE") (eq $status_norm "COMPLETED") (eq $status_norm "ARCHIVED") }}
-        {{ $status_class = "bg-sky-600 text-white border-sky-500 shadow-md shadow-sky-500/30 dark:bg-sky-500 dark:border-sky-400" }}
+        {{ $status_class = "portfolio-badge portfolio-badge-done" }}
       {{ end }}
       {{ $render_status_badge := and $show_status_badge (ne $status_display "") }}
+
+      {{/* Award badge: projects with awards frontmatter or an Award link */}}
+      {{ $has_award := false }}
+      {{ with $item.Params.awards }}
+        {{ if gt (len .) 0 }}{{ $has_award = true }}{{ end }}
+      {{ end }}
+      {{ if not $has_award }}
+        {{ $award_links := $item.Params.links }}
+        {{ if reflect.IsSlice $award_links }}
+          {{ range $award_links }}
+            {{ if and (reflect.IsMap .) (eq (upper (strings.TrimSpace (printf "%v" (index . "label")))) "AWARD") }}
+              {{ $has_award = true }}
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+      {{ $award_class := "portfolio-badge portfolio-badge-award" }}
 
       <article
         x-data="{ filters: {{ $card_allowed_filters_json }} }"
@@ -298,17 +315,27 @@
             </div>
           {{ end }}
           
-          {{/* Status Badge */}}
+          {{/* Gradient Overlay */}}
+          <div class="absolute inset-0 z-[1] bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent pointer-events-none"></div>
+
+          {{/* Award Badge (left) — above image overlay */}}
+          {{ if $has_award }}
+          <div class="absolute top-3 left-3 z-20">
+            <span class="{{ $award_class }}">
+              {{ partial "functions/get_icon" (dict "name" "trophy" "attributes" "class=\"w-3.5 h-3.5\"") }}
+              <span>Award</span>
+            </span>
+          </div>
+          {{ end }}
+
+          {{/* Status Badge (right) — above image overlay */}}
           {{ if $render_status_badge }}
-          <div class="absolute top-3 right-3">
-            <span class="px-2.5 py-1.5 text-xs font-semibold rounded-full border {{ $status_class }}">
+          <div class="absolute top-3 right-3 z-20">
+            <span class="{{ $status_class }}">
               {{ $status_display }}
             </span>
           </div>
           {{ end }}
-          
-          {{/* Gradient Overlay */}}
-          <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent"></div>
         </div>
 
         {{/* Card Content - use flex-col to push links to bottom */}}
@@ -416,7 +443,9 @@
                   {{ end }}
                 {{ end }}
                 {{ if not $icon }}
-                  {{ if eq $type "github" }}
+                  {{ if eq (upper $label) "AWARD" }}
+                    {{ $icon = "trophy" }}
+                  {{ else if eq $type "github" }}
                     {{ $icon = "brands/github" }}
                   {{ else if eq $type "live" }}
                     {{ $icon = "globe-alt" }}

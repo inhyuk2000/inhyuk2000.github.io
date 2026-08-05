@@ -12,3 +12,42 @@
 html:not(.dark) .high-mark {
   background-image: linear-gradient(transparent 48%, #ffe566 48%);
 }
+
+/* Portfolio card badges — plain CSS so colors don't depend on Tailwind scan of blox/ */
+.portfolio-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border-width: 1px;
+  border-style: solid;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
+}
+
+.portfolio-badge-award {
+  background-color: #facc15;
+  color: #422006;
+  border-color: #fde047;
+}
+
+.portfolio-badge-hold {
+  background-color: #6b7280;
+  color: #fff;
+  border-color: #9ca3af;
+}
+
+.portfolio-badge-live {
+  background-color: #059669;
+  color: #fff;
+  border-color: #10b981;
+}
+
+.portfolio-badge-done {
+  background-color: #0284c7;
+  color: #fff;
+  border-color: #0ea5e9;
+}

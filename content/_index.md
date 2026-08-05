@@ -47,7 +47,7 @@ sections:
   - block: portfolio
     id: projects
     content:
-      title: "프로젝트"
+      title: "Project"
       subtitle: "그동안 배우고 쌓아온 경험들"
       count: 0
       filters:
@@ -81,7 +81,7 @@ sections:
   - block: tech-stack
     id: skills
     content:
-      title: "기술 스택"
+      title: "Tech Stack"
       subtitle: "Hard Skills"
       categories:
         - name: Programming Languages
@@ -180,8 +180,8 @@ sections:
   - block: contribution-graph
     id: blog
     content:
-      title: Study Log
-      subtitle: '매일 쌓아가는 공부 · 코딩 테스트 · 프로젝트 기록'
+      title: Learning Garden
+      subtitle: '매일의 커밋과 기술 기록을 통해 꾸준히 성장해 나가는 개발 일지'
       filters:
         folders:
           - blog

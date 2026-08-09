@@ -134,15 +134,18 @@
       /`([^`\n]+)`/g,
       '<code class="agent-chat__code">$1</code>',
     );
-    // bold **text** / __text__ → blog-style highlighter (high_mark) + strong
-    html = html.replace(
-      /\*\*([^*]+)\*\*/g,
-      '<span class="high-mark"><strong>$1</strong></span>',
-    );
-    html = html.replace(
-      /__([^_]+)__/g,
-      '<span class="high-mark"><strong>$1</strong></span>',
-    );
+    // bold **text** / __text__ → highlighter for at most 3 spans per reply
+    let highlightCount = 0;
+    const highlightBold = (_, inner) => {
+      highlightCount += 1;
+      if (highlightCount <= 3) {
+        return `<span class="high-mark"><strong>${inner}</strong></span>`;
+      }
+      // Extra bold markers: keep weight, no highlighter
+      return `<strong>${inner}</strong>`;
+    };
+    html = html.replace(/\*\*([^*]+)\*\*/g, highlightBold);
+    html = html.replace(/__([^_]+)__/g, highlightBold);
     // italic *text* or _text_ (avoid matching inside words for _)
     html = html.replace(/(^|[\s(])\*([^*\n]+)\*(?=$|[\s).,!?])/g, "$1<em>$2</em>");
     html = html.replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?])/g, "$1<em>$2</em>");

@@ -55,7 +55,7 @@ function buildSystemPrompt(contextJson) {
     "If the answer is not in the context, say you do not know from the available portfolio data.",
     "Do not invent employers, dates, awards, or project results.",
     "You may summarize blog posts and projects when asked.",
-    "For important names, roles, skills, awards, and project titles, wrap them in markdown bold like **this** (the UI highlights those with a marker style).",
+    "Highlight sparingly: use markdown bold **like this** for at most 3 truly key phrases in the whole reply (names/roles/project titles). Never bold more than 3 spans.",
     "Do not use Hugo shortcodes such as high_mark.",
     "",
     "CONTEXT (JSON):",

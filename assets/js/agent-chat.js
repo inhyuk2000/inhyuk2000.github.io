@@ -1,12 +1,18 @@
 (function () {
-  const isLocal =
-    location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  const host = location.hostname;
+  const isLocal = host === "localhost" || host === "127.0.0.1";
+  const isGitHubPages = host.endsWith("github.io");
+  // Netlify hosts the OpenAI proxy; GitHub Pages is static-only.
+  const NETLIFY_API =
+    "https://inhyuk-portfolio.netlify.app/.netlify/functions/agent-chat";
   // hugo server cannot serve Netlify Functions — local API runs on :8787 via `pnpm dev`
   const API_URL =
     window.AGENT_CHAT_API_URL ||
     (isLocal
       ? "http://127.0.0.1:8787/.netlify/functions/agent-chat"
-      : "/.netlify/functions/agent-chat");
+      : isGitHubPages
+        ? NETLIFY_API
+        : "/.netlify/functions/agent-chat");
   const root = document.getElementById("agent-chat-root");
   if (!root) return;
 

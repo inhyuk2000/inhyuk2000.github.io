@@ -5,12 +5,31 @@ const MAX_MESSAGE_CHARS = 2000;
 const MAX_HISTORY = 12;
 const MODEL = "gpt-4o-mini";
 
-function jsonResponse(statusCode, body) {
+const ALLOWED_ORIGINS = new Set([
+  "https://inhyuk2000.github.io",
+  "https://inhyuk-portfolio.netlify.app",
+  "http://localhost:1313",
+  "http://127.0.0.1:1313",
+]);
+
+function corsHeaders(event) {
+  const origin = event?.headers?.origin || event?.headers?.Origin || "";
+  const allowed = ALLOWED_ORIGINS.has(origin) ? origin : "https://inhyuk2000.github.io";
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    Vary: "Origin",
+  };
+}
+
+function jsonResponse(statusCode, body, event) {
   return {
     statusCode,
     headers: {
       "Content-Type": "application/json; charset=utf-8",
       "Cache-Control": "no-store",
+      ...corsHeaders(event),
     },
     body: JSON.stringify(body),
   };
@@ -105,42 +124,47 @@ export async function handler(event) {
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 204,
-      headers: {
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
+      headers: corsHeaders(event),
       body: "",
     };
   }
 
   if (event.httpMethod !== "POST") {
-    return jsonResponse(405, { error: "Method not allowed" });
+    return jsonResponse(405, { error: "Method not allowed" }, event);
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) {
-    return jsonResponse(500, {
-      error: "OPENAI_API_KEY is not configured on the server.",
-    });
+    return jsonResponse(
+      500,
+      { error: "OPENAI_API_KEY is not configured on the server." },
+      event,
+    );
   }
 
   let payload;
   try {
     payload = JSON.parse(event.body || "{}");
   } catch {
-    return jsonResponse(400, { error: "Invalid JSON body." });
+    return jsonResponse(400, { error: "Invalid JSON body." }, event);
   }
 
   const normalized = normalizeMessages(payload.messages);
   if (!normalized || normalized.error) {
-    return jsonResponse(400, { error: normalized?.error || "Invalid messages." });
+    return jsonResponse(
+      400,
+      { error: normalized?.error || "Invalid messages." },
+      event,
+    );
   }
 
   const contextJson = await loadContext();
   if (!contextJson) {
-    return jsonResponse(500, {
-      error: "agent-context.json missing. Run the build-agent-context script.",
-    });
+    return jsonResponse(
+      500,
+      { error: "agent-context.json missing. Run the build-agent-context script." },
+      event,
+    );
   }
 
   try {
@@ -164,18 +188,20 @@ export async function handler(event) {
     if (!openaiRes.ok) {
       const message =
         data?.error?.message || `OpenAI request failed (${openaiRes.status})`;
-      return jsonResponse(502, { error: message });
+      return jsonResponse(502, { error: message }, event);
     }
 
     const reply = data?.choices?.[0]?.message?.content?.trim();
     if (!reply) {
-      return jsonResponse(502, { error: "Empty response from model." });
+      return jsonResponse(502, { error: "Empty response from model." }, event);
     }
 
-    return jsonResponse(200, { reply });
+    return jsonResponse(200, { reply }, event);
   } catch (err) {
-    return jsonResponse(500, {
-      error: err?.message || "Unexpected server error.",
-    });
+    return jsonResponse(
+      500,
+      { error: err?.message || "Unexpected server error." },
+      event,
+    );
   }
 }

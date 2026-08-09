@@ -1,8 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const MAX_MESSAGE_CHARS = 2000;
 const MAX_HISTORY = 12;
@@ -19,15 +16,37 @@ function jsonResponse(statusCode, body) {
   };
 }
 
-function loadContextFromDisk() {
-  const candidates = [
-    path.join(__dirname, "agent-context.json"),
-    path.join(process.cwd(), "public", "agent-context.json"),
-    path.join(process.cwd(), "static", "agent-context.json"),
+function contextCandidates() {
+  const roots = [
+    process.cwd(),
+    process.env.LAMBDA_TASK_ROOT,
+    "/var/task",
+  ].filter(Boolean);
+
+  const rel = [
+    "agent-context.json",
+    path.join("netlify", "functions", "agent-context.json"),
+    path.join("public", "agent-context.json"),
+    path.join("static", "agent-context.json"),
   ];
-  for (const filePath of candidates) {
-    if (fs.existsSync(filePath)) {
-      return fs.readFileSync(filePath, "utf8");
+
+  const out = [];
+  for (const root of roots) {
+    for (const r of rel) {
+      out.push(path.join(root, r));
+    }
+  }
+  return out;
+}
+
+function loadContextFromDisk() {
+  for (const filePath of contextCandidates()) {
+    try {
+      if (fs.existsSync(filePath)) {
+        return fs.readFileSync(filePath, "utf8");
+      }
+    } catch {
+      // keep looking
     }
   }
   return null;

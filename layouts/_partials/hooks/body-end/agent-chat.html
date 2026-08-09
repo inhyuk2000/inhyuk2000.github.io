@@ -1,0 +1,58 @@
+{{/* Floating portfolio Agent chat — injected site-wide via HugoBlox body-end hook */}}
+<div id="agent-chat-root" class="agent-chat" data-open="false">
+  <div id="agent-chat-panel" class="agent-chat__panel" data-agent-panel hidden>
+    <header class="agent-chat__header">
+      <div class="agent-chat__title-wrap">
+        <span class="agent-chat__avatar" aria-hidden="true">IH</span>
+        <div>
+          <p class="agent-chat__title">Ask In Hyuk</p>
+          <p class="agent-chat__subtitle">Portfolio Agent</p>
+        </div>
+      </div>
+      <button type="button" class="agent-chat__icon-btn" data-agent-close aria-label="Close chat">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 6L6 18M6 6l12 12"/>
+        </svg>
+      </button>
+    </header>
+
+    <div class="agent-chat__messages" data-agent-messages role="log" aria-live="polite"></div>
+    <p class="agent-chat__status" data-agent-status aria-live="polite"></p>
+
+    <form class="agent-chat__form" data-agent-form>
+      <label class="sr-only" for="agent-chat-input">Message</label>
+      <input
+        id="agent-chat-input"
+        class="agent-chat__input"
+        data-agent-input
+        type="text"
+        autocomplete="off"
+        maxlength="2000"
+        placeholder="경력, 프로젝트, 블로그에 대해 물어보세요…"
+      />
+      <button type="submit" class="agent-chat__send" aria-label="Send message">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <button
+    type="button"
+    class="agent-chat__fab"
+    data-agent-fab
+    aria-expanded="false"
+    aria-controls="agent-chat-panel"
+    aria-label="Open Agent chat"
+  >
+    <svg class="agent-chat__fab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+    </svg>
+    <span class="agent-chat__fab-label">Agent</span>
+  </button>
+</div>
+
+{{ with resources.Get "js/agent-chat.js" }}
+  <script src="{{ .RelPermalink }}" defer></script>
+{{ end }}

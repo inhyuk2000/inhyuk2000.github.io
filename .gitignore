@@ -43,6 +43,10 @@ package-lock.json
 .env.local
 .env.*.local
 
+# Generated Agent context (built by scripts/build-agent-context.mjs)
+static/agent-context.json
+netlify/functions/agent-context.json
+
 # ============================================================================
 # Generated Content
 # ============================================================================

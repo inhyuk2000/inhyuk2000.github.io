@@ -9,6 +9,9 @@
     
     echo "=== Installing dependencies ==="
     pnpm install --verbose --no-frozen-lockfile
+
+    echo "=== Building Agent context ==="
+    pnpm run agent-context
     
     echo "=== Running Hugo build ==="
     hugo --gc --minify -b $URL --logLevel debug --printI18nWarnings --printPathWarnings
@@ -20,8 +23,13 @@
   """
   publish = "public"
 
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+  included_files = ["netlify/functions/agent-context.json", "static/agent-context.json", "public/agent-context.json"]
+
 [build.environment]
-  HUGO_VERSION = "0.162.0"
+  HUGO_VERSION = "0.164.0"
   GO_VERSION = "1.21.5"
   NODE_VERSION = "22"
   # Netlify runs an implicit install step; ensure it never enforces frozen lockfiles
@@ -41,6 +49,7 @@
     echo "=== Deploy Preview Build ==="
     echo "Deploy URL: $DEPLOY_PRIME_URL"
     pnpm install --verbose --no-frozen-lockfile
+    pnpm run agent-context
     hugo --gc --minify --buildFuture -b $DEPLOY_PRIME_URL --logLevel debug --printI18nWarnings --printPathWarnings
     pnpm run pagefind
   """
@@ -51,6 +60,7 @@
     echo "=== Branch Deploy Build ==="
     echo "Deploy URL: $DEPLOY_PRIME_URL"
     pnpm install --verbose --no-frozen-lockfile
+    pnpm run agent-context
     hugo --gc --minify -b $DEPLOY_PRIME_URL --logLevel debug --printI18nWarnings --printPathWarnings
     pnpm run pagefind
   """

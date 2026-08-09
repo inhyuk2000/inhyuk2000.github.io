@@ -269,6 +269,6 @@
   // Welcome message (local only, not sent to API until user chats)
   appendBubble(
     "assistant",
-    "안녕하세요! In Hyuk에 대해 궁금한 점(경력, 프로젝트, 블로그 등)을 물어보세요.",
+    "안녕하세요! 저는 송인혁이에요. 제 경력, 프로젝트, 블로그 등 궁금한 점을 편하게 물어봐 주세요.",
   );
 })();

@@ -326,6 +326,11 @@ img.agent-chat__avatar {
   font-weight: 700;
 }
 
+/* Match blog {{% high_mark %}} look inside chat bubbles */
+.agent-chat__bubble .high-mark {
+  font-weight: 700;
+}
+
 .agent-chat__bubble em {
   font-style: italic;
 }

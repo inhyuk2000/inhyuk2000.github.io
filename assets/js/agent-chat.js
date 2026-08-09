@@ -134,9 +134,15 @@
       /`([^`\n]+)`/g,
       '<code class="agent-chat__code">$1</code>',
     );
-    // bold **text** or __text__
-    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-    html = html.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    // bold **text** / __text__ → blog-style highlighter (high_mark) + strong
+    html = html.replace(
+      /\*\*([^*]+)\*\*/g,
+      '<span class="high-mark"><strong>$1</strong></span>',
+    );
+    html = html.replace(
+      /__([^_]+)__/g,
+      '<span class="high-mark"><strong>$1</strong></span>',
+    );
     // italic *text* or _text_ (avoid matching inside words for _)
     html = html.replace(/(^|[\s(])\*([^*\n]+)\*(?=$|[\s).,!?])/g, "$1<em>$2</em>");
     html = html.replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?])/g, "$1<em>$2</em>");

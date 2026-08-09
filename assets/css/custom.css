@@ -322,6 +322,48 @@ img.agent-chat__avatar {
   word-break: break-word;
 }
 
+.agent-chat__bubble strong {
+  font-weight: 700;
+}
+
+.agent-chat__bubble em {
+  font-style: italic;
+}
+
+.agent-chat__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.84em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3rem;
+  background: rgba(148, 163, 184, 0.18);
+}
+
+.agent-chat__codeblock {
+  margin: 0.45rem 0 0;
+  padding: 0.55rem 0.65rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  font-size: 0.8em;
+  white-space: pre;
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.agent-chat__bubble--user .agent-chat__code,
+.agent-chat__bubble--user .agent-chat__codeblock {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.agent-chat__link {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+
+.agent-chat__link:hover {
+  opacity: 0.9;
+}
+
 .agent-chat__bubble--user {
   background: var(--agent-user);
   color: #fff;

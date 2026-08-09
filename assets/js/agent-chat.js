@@ -113,6 +113,49 @@
     return wrap;
   }
 
+  function escapeHtml(text) {
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  /** Lightweight markdown for chat bubbles: bold, italic, inline code, links. */
+  function renderChatMarkdown(text) {
+    let html = escapeHtml(text);
+    // fenced code blocks first
+    html = html.replace(/```([\s\S]*?)```/g, (_, code) => {
+      return `<pre class="agent-chat__codeblock"><code>${code.trim()}</code></pre>`;
+    });
+    // inline code
+    html = html.replace(
+      /`([^`\n]+)`/g,
+      '<code class="agent-chat__code">$1</code>',
+    );
+    // bold **text** or __text__
+    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    html = html.replace(/__([^_]+)__/g, "<strong>$1</strong>");
+    // italic *text* or _text_ (avoid matching inside words for _)
+    html = html.replace(/(^|[\s(])\*([^*\n]+)\*(?=$|[\s).,!?])/g, "$1<em>$2</em>");
+    html = html.replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?])/g, "$1<em>$2</em>");
+    // links [label](url)
+    html = html.replace(
+      /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g,
+      '<a class="agent-chat__link" href="$2" target="_blank" rel="noopener noreferrer">$1</a>',
+    );
+    return html;
+  }
+
+  function setBubbleContent(bubble, content, { markdown = false } = {}) {
+    if (markdown) {
+      bubble.innerHTML = renderChatMarkdown(content);
+    } else {
+      bubble.textContent = content;
+    }
+  }
+
   function appendBubble(role, content, options = {}) {
     const { pending = false } = options;
     const row = document.createElement("div");
@@ -123,7 +166,8 @@
       bubble.classList.add("agent-chat__bubble--pending");
       bubble.appendChild(makeTypingIndicator());
     } else {
-      bubble.textContent = content;
+      // Assistant replies may include markdown (e.g. **bold**); user stays plain text.
+      setBubbleContent(bubble, content, { markdown: role === "assistant" });
     }
     row.appendChild(bubble);
     messagesEl.appendChild(row);
@@ -172,19 +216,20 @@
       if (!reply) throw new Error("빈 응답을 받았습니다.");
       history.push({ role: "assistant", content: reply });
       thinking.classList.remove("agent-chat__bubble--pending");
-      thinking.textContent = reply;
+      setBubbleContent(thinking, reply, { markdown: true });
       setStatus("");
     } catch (err) {
       thinking.classList.remove("agent-chat__bubble--pending");
       thinking.classList.add("agent-chat__bubble--error");
       const msg = String(err?.message || "");
-      thinking.textContent =
+      const errorText =
         msg.includes("Failed to fetch") || msg.includes("NetworkError")
           ? isLocal
             ? "로컬 Agent API(127.0.0.1:8787)에 연결할 수 없습니다. `pnpm dev`로 실행 중인지 확인해주세요."
             : "Agent API에 연결할 수 없습니다. Netlify 배포 상태를 확인해주세요."
           : msg ||
             "지금은 답변할 수 없습니다. Netlify에 배포되어 있고 OPENAI_API_KEY가 설정돼 있는지 확인해주세요.";
+      setBubbleContent(thinking, errorText, { markdown: false });
       // Keep conversation usable: drop failed user turn from history for retries
       history.pop();
       setStatus("");

@@ -189,6 +189,14 @@ html:not(.dark) .agent-chat {
   font-size: 0.75rem;
   font-weight: 700;
   flex-shrink: 0;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+img.agent-chat__avatar {
+  display: block;
+  padding: 0;
+  background: transparent;
 }
 
 .agent-chat__title {

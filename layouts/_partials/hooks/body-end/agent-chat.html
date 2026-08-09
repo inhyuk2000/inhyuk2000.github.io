@@ -3,7 +3,18 @@
   <div id="agent-chat-panel" class="agent-chat__panel" data-agent-panel hidden>
     <header class="agent-chat__header">
       <div class="agent-chat__title-wrap">
-        <span class="agent-chat__avatar" aria-hidden="true">IH</span>
+        {{ with resources.Get "media/authors/me3.jpg" }}
+          {{ $avatar := .Fill "96x96 Center" }}
+          <img
+            class="agent-chat__avatar"
+            src="{{ $avatar.RelPermalink }}"
+            alt="In Hyuk"
+            width="36"
+            height="36"
+          />
+        {{ else }}
+          <span class="agent-chat__avatar" aria-hidden="true">IH</span>
+        {{ end }}
         <div>
           <p class="agent-chat__title">Ask In Hyuk</p>
           <p class="agent-chat__subtitle">Portfolio Agent</p>

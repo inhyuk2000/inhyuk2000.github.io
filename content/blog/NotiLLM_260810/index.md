@@ -12,6 +12,8 @@ featured: true
 
 > [!note] 지금 어떤 식으로 검증을 진행할 지, 그리고 필요하다면 추가적으로 JSON 필드를 수정해 결과를 정확히 검증할 수 있는 방법을 고민중입니다.
 
+[Colab Link (수정중)](https://colab.research.google.com/drive/1xMbI-0sWAL4gFqEr_G8fU2_qvwUj8qV-?usp=sharing)
+
 ## 사용자 알림 규칙 설정 패턴 분석
 
 > RQ1. 사용자들은 어떤 형태의 알림 제어 규칙을 주로 설정하는가?

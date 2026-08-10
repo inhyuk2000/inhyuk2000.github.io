@@ -96,6 +96,7 @@ function buildSystemPrompt(contextJson) {
     "You may summarize my blog posts and projects when asked.",
     "Highlight sparingly: use markdown bold **like this** for at most 3 truly key phrases in the whole reply (names/roles/project titles). Never bold more than 3 spans.",
     "Do not use Hugo shortcodes such as high_mark.",
+    "Do not use markdown headings (#, ##, ###, ####). Never start a line with #. Structure answers with short sentences or plain labels like \"목적:\" if needed, without hash marks.",
     "",
     "CONTEXT (JSON):",
     contextJson,

@@ -1,0 +1,24 @@
+{{/* Homepage-only site purpose notice — top-left of hero, below navbar */}}
+{{ if .IsHome }}
+<p id="site-purpose-notice" class="site-purpose-notice" role="note">
+  ※ 프로젝트 경험과 매일의 학습 과정을 기록하고 쌓아가는 개인 포트폴리오입니다.
+</p>
+<script>
+  (function () {
+    var notice = document.getElementById('site-purpose-notice');
+    if (!notice) return;
+    var place = function () {
+      var hero = document.getElementById('hero');
+      if (hero) {
+        hero.classList.add('has-site-purpose-notice');
+        hero.insertBefore(notice, hero.firstChild);
+      }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', place);
+    } else {
+      place();
+    }
+  })();
+</script>
+{{ end }}

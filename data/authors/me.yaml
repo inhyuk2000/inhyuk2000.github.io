@@ -40,11 +40,20 @@ education:
     start: 2021-09-01
     end: 2026-08-31
     summary: |
-      <span style="font-size: 0.875rem;">소프트웨어 공학과 LLM 기반 데이터 분석을 중심으로 연구 및 프로젝트를 수행해 왔습니다. <br/> 🎓 졸업 프로젝트 : **멀티 모델을 활용한 RAG Generation 단계 환각 탐지**</span>
+      <span style="font-size: 0.875rem;">소프트웨어 공학과 LLM 기반 데이터 분석을 중심으로 연구 및 프로젝트를 수행해 왔습니다. <br/> ※ 졸업 프로젝트 : **멀티 모델을 활용한 RAG Generation 단계 환각 탐지**</span>
     button:
       text: View Graduation Project
       url: https://github.com/inhyuk2000/A-Multi-LLM-Cross-Verification-Framework-for-Attribution-Hallucination-Detection-in-RAG-Generation
       icon: brands/github
+  - degree: 전과 계기 (Turning Point)
+    institution: 코로나맵
+    kind: turning_point
+    start: 2020-01-01
+    end: 2020-12-31
+    year: "2020"
+    summary: |
+      COVID-19 당시 수많은 사람에게 실질적 도움을 주는 '코로나맵'을 보며 소프트웨어가 가진 실시간 영향력에 매료되어 컴퓨터공학과로 전과를 결심하게 되었습니다.
+    footnote: 기계공학과 → 컴퓨터공학과 전과 결정
   - degree: 기계공학과
     institution: 경희대학교
     start: 2020-03-01
@@ -54,12 +63,13 @@ education:
   - degree: 인문계 졸업
     institution: 동백고등학교
     start: 2015-03-01
-    end: 2018-02-31
+    end: 2018-02-28
     summary: |
       <span style="font-size: 0.875rem;">학창 시절 유독 공부에 관심이 많았고, 특히 수학과 과학(물리학)을 좋아했습니다.</span>
 
 experience:
   - role: 학부연구생
+    kind: highlight
     org: User Experience Lab 연구실
     start: 2024-12-01
     end: 2025-12-31
@@ -82,7 +92,7 @@ experience:
   - role: 페이서 및 기획부원 (운영진)
     org: KHUMA 경희대 마라톤 동아리
     start: 2023-09-01
-    end: 2024-11-31
+    end: 2024-11-30
     summary: |
       <span style="font-size: 0.875rem;">타 단과대 학우들도 많이 사귀고 함께 러닝하면서 건강해질 수 있어서 행복했던 시간이었습니다. 깊은 관계의 좋은 친구들도 많이 사귀었고, 운영진으로서 동아리 활동 전반을 기획하고 주도해보는 뜻깊은 경험도 해보았습니다.</span>
     button:

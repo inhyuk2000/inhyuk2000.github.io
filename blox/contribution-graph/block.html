@@ -1,5 +1,5 @@
 {{/* Hugo Blox: Contribution Graph (GitHub-style study log) */}}
-{{/* Replaces Recent Posts with a contribution heatmap driven by blog post dates. */}}
+{{/* Heatmap + topic folders (theme directories under blog/). */}}
 
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
@@ -23,25 +23,88 @@
   {{ if $folder }}{{ $folders = slice $folder }}{{ end }}
 {{ end }}
 {{ if eq (len $folders) 0 }}{{ $folders = slice "blog" }}{{ end }}
+{{ $sectionName := index $folders 0 }}
 
 {{ $query := where site.RegularPages "Section" "in" $folders }}
 {{ $query = sort $query "Date" "desc" }}
 
-{{/* Group posts by date key YYYY-MM-DD */}}
+{{/* ---- Theme folders (explicit config, with defaults) ---- */}}
+{{ $topicsTitle := "" }}
+{{ with index $content "topics_title" }}{{ $topicsTitle = strings.TrimSpace (printf "%v" .) }}{{ end }}
+{{ if not $topicsTitle }}{{ $topicsTitle = "Topics" }}{{ end }}
+
+{{ $themesRaw := index $content "themes" | default slice }}
+{{ $themeDefs := slice }}
+{{ if reflect.IsSlice $themesRaw }}
+  {{ range $themesRaw }}
+    {{ if reflect.IsMap . }}
+      {{ $id := strings.TrimSpace (printf "%v" (index . "id" | default "")) }}
+      {{ $t := strings.TrimSpace (printf "%v" (index . "title" | default $id)) }}
+      {{ if $id }}
+        {{ $themeDefs = $themeDefs | append (dict "id" $id "title" $t) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ if eq (len $themeDefs) 0 }}
+  {{ $themeDefs = slice
+      (dict "id" "notillm" "title" "NotiLLM")
+      (dict "id" "coding-test" "title" "Coding Test")
+      (dict "id" "interview-feedback" "title" "Interview Feedback")
+      (dict "id" "multiagent" "title" "MultiAgent")
+      (dict "id" "schedule" "title" "Schedule")
+      (dict "id" "trashbin" "title" "TrashBin")
+  }}
+{{ end }}
+
+{{/* Group posts by date + by theme folder */}}
 {{ $postsByDate := dict }}
-{{ $postItems := slice }}
+{{ $postsByTheme := dict }}
+{{ range $themeDefs }}
+  {{ $postsByTheme = merge $postsByTheme (dict .id (slice)) }}
+{{ end }}
+
 {{ range $query }}
   {{ $key := .Date.Format "2006-01-02" }}
+  {{ $dir := replace .File.Dir "\\" "/" }}
+  {{ $dir = strings.TrimSuffix "/" $dir }}
+  {{ $parts := split $dir "/" }}
+  {{ $themeId := "" }}
+  {{ if ge (len $parts) 2 }}
+    {{ $themeId = index $parts 1 }}
+  {{ end }}
+
   {{ $item := dict
       "title" .Title
       "url" .RelPermalink
       "summary" (.Params.summary | default (.Summary | plainify | truncate 120))
       "date" $key
+      "dateUnix" .Date.Unix
       "dateLabel" (.Date.Format "Jan 2, 2006")
+      "theme" $themeId
   }}
-  {{ $postItems = $postItems | append $item }}
+
   {{ $existing := index $postsByDate $key | default slice }}
   {{ $postsByDate = merge $postsByDate (dict $key ($existing | append $item)) }}
+
+  {{ if and $themeId (isset $postsByTheme $themeId) }}
+    {{ $themePosts := index $postsByTheme $themeId | default slice }}
+    {{ $postsByTheme = merge $postsByTheme (dict $themeId ($themePosts | append $item)) }}
+  {{ end }}
+{{ end }}
+
+{{/* Build theme payload: posts sorted oldest → newest */}}
+{{ $themes := slice }}
+{{ range $themeDefs }}
+  {{ $id := .id }}
+  {{ $rawPosts := index $postsByTheme $id | default slice }}
+  {{ $sorted := sort $rawPosts "dateUnix" "asc" }}
+  {{ $themes = $themes | append (dict
+      "id" $id
+      "title" .title
+      "count" (len $sorted)
+      "posts" $sorted
+    ) }}
 {{ end }}
 
 {{/* ---- Build 53-week calendar (Sun–Sat), ending this week ---- */}}
@@ -108,27 +171,24 @@
 {{ $subtitle := "" }}
 {{ with index $content "subtitle" }}{{ $subtitle = strings.TrimSpace (printf "%v" .) }}{{ end }}
 
-{{ $archive_page := site.GetPage "Section" (index $folders 0) }}
+{{ $archive_page := site.GetPage "Section" $sectionName }}
 {{ $archive_link := "" }}
 {{ with $archive_page }}{{ $archive_link = .RelPermalink }}{{ end }}
 
-{{ $recentLimit := partial "functions/coerce_int" (dict "value" (index $content "recent_count") "default" 5 "min" 1 "max" 20) }}
-{{ $recentPosts := first $recentLimit $postItems }}
-
 {{ $payload := dict
     "postsByDate" $postsByDate
-    "recent" $recentPosts
+    "themes" $themes
+    "topicsTitle" $topicsTitle
     "today" $todayKey
 }}
 {{ $payloadB64 := $payload | jsonify | base64Encode }}
-{{ $rootId := $block.id | default "blog" }}
 
 <div
   class="cg-block mx-auto w-full max-w-5xl px-4 sm:px-6"
   data-cg-payload="{{ $payloadB64 }}"
   x-data="contributionGraph()"
   x-init="initFromBase64($el.dataset.cgPayload)"
-  @keydown.escape.window="clearSelection()"
+  @keydown.escape.window="goBack()"
 >
   {{/* Section header */}}
   <div class="mb-8 text-center">
@@ -236,40 +296,94 @@
     <span x-text="tip.dateText"></span>
   </div>
 
-  {{/* Activity panel */}}
+  {{/* Topics / folder panel */}}
   <div class="cg-activity">
     <div class="cg-activity-header">
-      <h3 class="cg-activity-title" x-text="selected ? selectedLabel + ' posts' : 'Recent posts'"></h3>
+      <h3 class="cg-activity-title" x-text="panelTitle"></h3>
       <button
         type="button"
         class="cg-clear-btn"
-        x-show="selected"
+        x-show="selected || activeTheme"
         x-cloak
-        @click="clearSelection()"
+        @click="goBack()"
       >
-        Show recent
+        <span x-text="selected ? 'Show topics' : 'All topics'"></span>
       </button>
     </div>
 
-    <template x-if="visiblePosts.length === 0">
-      <p class="cg-empty">
-        <span x-show="selected">No posts on this day.</span>
-        <span x-show="!selected">No posts yet. Start writing your daily study log!</span>
-      </p>
+    {{/* Day selection: posts for that day */}}
+    <template x-if="selected">
+      <div>
+        <template x-if="visiblePosts.length === 0">
+          <p class="cg-empty">No posts on this day.</p>
+        </template>
+        <ul class="cg-post-list" x-show="visiblePosts.length > 0">
+          <template x-for="post in visiblePosts" :key="post.url">
+            <li class="cg-post-item">
+              <div class="cg-post-rail" aria-hidden="true"></div>
+              <div class="cg-post-body">
+                <time class="cg-post-date" x-text="post.dateLabel"></time>
+                <a class="cg-post-title" :href="post.url" x-text="post.title"></a>
+                <p class="cg-post-summary" x-show="post.summary" x-text="post.summary"></p>
+              </div>
+            </li>
+          </template>
+        </ul>
+      </div>
     </template>
 
-    <ul class="cg-post-list" x-show="visiblePosts.length > 0">
-      <template x-for="post in visiblePosts" :key="post.url">
-        <li class="cg-post-item">
-          <div class="cg-post-rail" aria-hidden="true"></div>
-          <div class="cg-post-body">
-            <time class="cg-post-date" x-text="post.dateLabel"></time>
-            <a class="cg-post-title" :href="post.url" x-text="post.title"></a>
-            <p class="cg-post-summary" x-show="post.summary" x-text="post.summary"></p>
-          </div>
-        </li>
-      </template>
-    </ul>
+    {{/* Folder grid */}}
+    <template x-if="!selected && !activeTheme">
+      <ul class="cg-folder-grid" role="list">
+        <template x-for="theme in themes" :key="theme.id">
+          <li>
+            <button
+              type="button"
+              class="cg-folder-card"
+              @click="openTheme(theme.id)"
+              :aria-label="theme.title + ', ' + theme.count + (theme.count === 1 ? ' post' : ' posts')"
+            >
+              <span class="cg-folder-icon" aria-hidden="true" x-show="theme.id !== 'trashbin'">
+                <svg viewBox="0 0 64 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="cg-folder-back" d="M2 10c0-2.2 1.8-4 4-4h16.5c1.2 0 2.3.5 3.1 1.4l2.8 3.2c.8.9 1.9 1.4 3.1 1.4H58c2.2 0 4 1.8 4 4v28c0 2.2-1.8 4-4 4H6c-2.2 0-4-1.8-4-4V10z"/>
+                  <path class="cg-folder-tab" d="M2 18h60v24c0 2.2-1.8 4-4 4H6c-2.2 0-4-1.8-4-4V18z"/>
+                </svg>
+              </span>
+              <span class="cg-folder-icon cg-trash-icon" aria-hidden="true" x-show="theme.id === 'trashbin'" x-cloak>
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="cg-trash-lid" d="M9 3h6l1 2h4v2H4V5h4l1-2z"/>
+                  <path class="cg-trash-body" d="M6 8h12l-1 13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L6 8z"/>
+                  <path class="cg-trash-lines" d="M10 11v7M14 11v7"/>
+                </svg>
+              </span>
+              <span class="cg-folder-name" x-text="theme.title"></span>
+              <span class="cg-folder-count" x-text="theme.count + (theme.count === 1 ? ' post' : ' posts')"></span>
+            </button>
+          </li>
+        </template>
+      </ul>
+    </template>
+
+    {{/* Theme drill-down: posts oldest → newest */}}
+    <template x-if="!selected && activeTheme">
+      <div>
+        <template x-if="visiblePosts.length === 0">
+          <p class="cg-empty">No posts in this topic yet.</p>
+        </template>
+        <ul class="cg-post-list" x-show="visiblePosts.length > 0">
+          <template x-for="post in visiblePosts" :key="post.url">
+            <li class="cg-post-item">
+              <div class="cg-post-rail" aria-hidden="true"></div>
+              <div class="cg-post-body">
+                <time class="cg-post-date" x-text="post.dateLabel"></time>
+                <a class="cg-post-title" :href="post.url" x-text="post.title"></a>
+                <p class="cg-post-summary" x-show="post.summary" x-text="post.summary"></p>
+              </div>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </template>
   </div>
 </div>
 
@@ -277,9 +391,11 @@
   function contributionGraph() {
     return {
       postsByDate: {},
-      recent: [],
+      themes: [],
+      topicsTitle: 'Topics',
       selected: null,
       selectedLabel: '',
+      activeTheme: null,
       tip: { show: false, x: 0, y: 0, countText: '', dateText: '' },
       initFromBase64(b64) {
         // atob() alone breaks UTF-8 (Korean); decode bytes with TextDecoder
@@ -293,25 +409,53 @@
           payload = {};
         }
         this.postsByDate = (payload && payload.postsByDate) || {};
-        this.recent = (payload && payload.recent) || [];
+        this.themes = (payload && payload.themes) || [];
+        this.topicsTitle = (payload && payload.topicsTitle) || 'Topics';
+      },
+      get panelTitle() {
+        if (this.selected) return this.selectedLabel + ' posts';
+        if (this.activeTheme) {
+          const theme = this.themes.find((t) => t.id === this.activeTheme);
+          return theme ? theme.title : this.topicsTitle;
+        }
+        return this.topicsTitle;
       },
       get visiblePosts() {
-        if (!this.selected) return this.recent;
-        return this.postsByDate[this.selected] || [];
+        if (this.selected) return this.postsByDate[this.selected] || [];
+        if (this.activeTheme) {
+          const theme = this.themes.find((t) => t.id === this.activeTheme);
+          const posts = (theme && theme.posts) || [];
+          return posts.slice().sort((a, b) => (a.dateUnix || 0) - (b.dateUnix || 0));
+        }
+        return [];
+      },
+      openTheme(id) {
+        this.selected = null;
+        this.selectedLabel = '';
+        this.activeTheme = id;
+        this.hideTip();
       },
       selectDay(key) {
         if (this.selected === key) {
-          this.clearSelection();
+          this.clearDay();
           return;
         }
         this.selected = key;
+        this.activeTheme = null;
         const posts = this.postsByDate[key] || [];
         this.selectedLabel = (posts[0] && posts[0].dateLabel) || key;
         this.hideTip();
       },
-      clearSelection() {
+      clearDay() {
         this.selected = null;
         this.selectedLabel = '';
+      },
+      goBack() {
+        if (this.selected) {
+          this.clearDay();
+          return;
+        }
+        this.activeTheme = null;
       },
       showTip(event) {
         const el = event.currentTarget;

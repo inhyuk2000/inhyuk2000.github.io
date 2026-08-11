@@ -182,10 +182,23 @@ sections:
     content:
       title: Learning Garden
       subtitle: '매일의 커밋과 기술 기록을 통해 꾸준히 성장해 나가는 개발 일지'
+      topics_title: Topics
       filters:
         folders:
           - blog
-      recent_count: 5
+      themes:
+        - id: notillm
+          title: NotiLLM
+        - id: coding-test
+          title: Coding Test
+        - id: interview-feedback
+          title: Interview Feedback
+        - id: multiagent
+          title: MultiAgent
+        - id: schedule
+          title: Schedule
+        - id: trashbin
+          title: TrashBin
     design:
       background:
         color:

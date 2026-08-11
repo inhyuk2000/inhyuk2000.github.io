@@ -257,6 +257,123 @@ button.cg-cell:focus-visible {
   margin-top: 28px;
 }
 
+.cg-folder-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cg-folder-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 10px 14px;
+  border: 1px solid var(--cg-border);
+  border-radius: 10px;
+  background: var(--cg-bg);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cg-folder-card:hover,
+.cg-folder-card:focus-visible {
+  border-color: var(--cg-link);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--cg-text) 8%, transparent);
+  outline: none;
+}
+
+.cg-folder-icon {
+  display: block;
+  width: 48px;
+  height: 40px;
+}
+
+.cg-folder-icon svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.cg-folder-back {
+  fill: #e3b341;
+}
+
+.cg-folder-tab {
+  fill: #f0c14b;
+}
+
+.dark .cg-folder-back {
+  fill: #9e6a03;
+}
+
+.dark .cg-folder-tab {
+  fill: #bf8700;
+}
+
+.cg-trash-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.cg-trash-lid {
+  fill: #8b949e;
+}
+
+.cg-trash-body {
+  fill: #6e7681;
+}
+
+.cg-trash-lines {
+  stroke: #c9d1d9;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.dark .cg-trash-lid {
+  fill: #8b949e;
+}
+
+.dark .cg-trash-body {
+  fill: #484f58;
+}
+
+.dark .cg-trash-lines {
+  stroke: #8b949e;
+}
+
+.cg-folder-name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--cg-text);
+  word-break: break-word;
+}
+
+.cg-folder-count {
+  font-size: 11px;
+  color: var(--cg-muted);
+  line-height: 1.2;
+}
+
+@media (max-width: 800px) {
+  .cg-folder-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .cg-folder-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .cg-activity-header {
   display: flex;
   align-items: center;
@@ -299,9 +416,9 @@ button.cg-cell:focus-visible {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
 }
 
 .cg-post-item {
@@ -310,10 +427,6 @@ button.cg-cell:focus-visible {
   gap: 12px;
   padding: 12px 0;
   border-bottom: 1px solid color-mix(in srgb, var(--cg-border, #d0d7de) 70%, transparent);
-}
-
-.cg-post-item:last-child {
-  border-bottom: none;
 }
 
 .cg-post-rail {
@@ -369,5 +482,9 @@ button.cg-cell:focus-visible {
 
   .cg-month {
     font-size: 10px;
+  }
+
+  .cg-post-list {
+    grid-template-columns: 1fr;
   }
 }

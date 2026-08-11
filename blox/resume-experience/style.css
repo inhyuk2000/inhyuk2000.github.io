@@ -1,0 +1,241 @@
+/* Experience + Education two-column container */
+.resume-exp-edu {
+  max-width: 92rem;
+}
+
+@media (min-width: 1024px) {
+  .resume-exp-edu-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    column-gap: 2.5rem;
+    row-gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .resume-title-exp {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+
+  .resume-title-edu {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+
+  .resume-title-exp.edu-first {
+    grid-column: 2;
+  }
+
+  .resume-title-edu.edu-first {
+    grid-column: 1;
+  }
+
+  .resume-rail-exp {
+    grid-column: 1;
+  }
+
+  .resume-rail-edu {
+    grid-column: 2;
+  }
+
+  .resume-rail-exp.edu-first {
+    grid-column: 2;
+  }
+
+  .resume-rail-edu.edu-first {
+    grid-column: 1;
+  }
+
+  .resume-rail {
+    position: relative;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .resume-rail .exp-timeline-line,
+  .resume-rail .edu-timeline-line {
+    position: absolute;
+    left: 1.5rem;
+    top: 0;
+    bottom: 0;
+    width: 0.125rem;
+  }
+
+  .resume-cell {
+    position: relative;
+    z-index: 1;
+    min-width: 0;
+    height: 100%;
+  }
+
+  .resume-cell--exp:not(.edu-first) {
+    grid-column: 1;
+  }
+
+  .resume-cell--edu:not(.edu-first) {
+    grid-column: 2;
+  }
+
+  .resume-cell--exp.edu-first {
+    grid-column: 2;
+  }
+
+  .resume-cell--edu.edu-first {
+    grid-column: 1;
+  }
+
+  .resume-cell .resume-slot {
+    height: 100%;
+  }
+
+  .resume-cell .resume-slot__card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .resume-card-divider {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    min-height: 1rem;
+  }
+}
+
+@media (max-width: 1023px) {
+  .resume-exp-edu-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .resume-rail {
+    display: none;
+  }
+
+  .resume-title-exp {
+    order: 1;
+  }
+
+  .resume-cell--exp {
+    order: 2;
+  }
+
+  .resume-title-edu {
+    order: 3;
+    margin-top: 1.5rem;
+  }
+
+  .resume-cell--edu {
+    order: 4;
+  }
+
+  .resume-cell .resume-slot {
+    min-height: 0;
+  }
+}
+
+/* Solid mint timeline rails (no gradient) */
+.exp-timeline-line,
+.edu-timeline-line {
+  background: #2dd4bf;
+}
+
+
+/* Soft hover for highlight / turning-point cards (mint) */
+.edu-turning-point__card,
+.exp-highlight__card {
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
+}
+
+.edu-turning-point:hover .edu-turning-point__card,
+.exp-highlight:hover .exp-highlight__card {
+  border-color: rgba(45, 212, 191, 0.45);
+  box-shadow: 0 4px 16px rgba(45, 212, 191, 0.12);
+  transform: translateX(0.25rem);
+}
+
+.dark .edu-turning-point:hover .edu-turning-point__card,
+.dark .exp-highlight:hover .exp-highlight__card {
+  border-color: rgba(45, 212, 191, 0.5);
+  box-shadow: 0 4px 18px rgba(45, 212, 191, 0.14);
+}
+
+/* Mint accents (non-highlight / non-turning-point items) */
+.tl-yellow-glow {
+  background-color: rgba(45, 212, 191, 0.3);
+}
+
+.group:hover .tl-yellow-glow {
+  background-color: rgba(45, 212, 191, 0.5);
+}
+
+.tl-yellow-ring {
+  border-color: #0d9488;
+}
+
+.group:hover .tl-yellow-ring {
+  border-color: #14b8a6;
+}
+
+.dark .tl-yellow-ring {
+  border-color: #2dd4bf;
+}
+
+.dark .group:hover .tl-yellow-ring {
+  border-color: #5eead4;
+}
+
+.tl-yellow-icon {
+  color: #0f766e;
+}
+
+.dark .tl-yellow-icon {
+  color: #2dd4bf;
+}
+
+.tl-yellow-text {
+  color: #0f766e;
+}
+
+.dark .tl-yellow-text {
+  color: #2dd4bf;
+}
+
+.tl-yellow-card:hover {
+  border-color: #14b8a6;
+}
+
+.dark .tl-yellow-card:hover {
+  border-color: rgba(45, 212, 191, 0.45);
+}
+
+.group:hover .tl-yellow-title {
+  color: #0f766e;
+}
+
+.dark .group:hover .tl-yellow-title {
+  color: #5eead4;
+}
+
+.tl-yellow-link:hover {
+  color: #0f766e;
+}
+
+.dark .tl-yellow-link:hover {
+  color: #5eead4;
+}
+
+.tl-yellow-tag {
+  background-color: #ccfbf1;
+  color: #0f766e;
+  border: 1px solid #99f6e4;
+}
+
+.dark .tl-yellow-tag {
+  background-color: rgba(45, 212, 191, 0.12);
+  color: #5eead4;
+  border-color: rgba(45, 212, 191, 0.28);
+}

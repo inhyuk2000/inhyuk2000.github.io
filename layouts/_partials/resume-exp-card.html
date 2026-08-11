@@ -1,0 +1,114 @@
+{{/*
+  Experience card cell
+  Context: dict "page" $page "item" $item "date_format" $date_format "edu_first_class" ""
+*/}}
+{{ $page := .page }}
+{{ $item := .item }}
+{{ $date_format := .date_format }}
+{{ $edu_first_class := .edu_first_class | default "" }}
+{{ $grid_row := .grid_row | default 0 }}
+{{ $is_highlight := eq (index $item "kind") "highlight" }}
+
+<div class="resume-cell resume-cell--exp{{ with $edu_first_class }} {{ . }}{{ end }}"{{ if $grid_row }} style="grid-row: {{ $grid_row }}"{{ end }}>
+  <div class="resume-slot group relative pl-12 sm:pl-16 h-full{{ if $is_highlight }} exp-highlight{{ end }}">
+    <div class="absolute left-0 sm:left-2 top-6 flex items-center justify-center z-[1]">
+      <div class="relative">
+        {{ if $is_highlight }}
+        <div class="tl-yellow-glow absolute inset-0 w-8 h-8 rounded-full blur-md transition-colors duration-200"></div>
+        <div class="tl-yellow-ring relative w-8 h-8 bg-white dark:bg-gray-900 border-2 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
+          {{ $icon := index $item "icon" }}
+          {{ if $icon }}
+            {{ partial "functions/get_icon" (dict "name" $icon "attributes" "class='w-4 h-4 tl-yellow-icon'") }}
+          {{ else }}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 256" class="w-4 h-4 tl-yellow-icon"><path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"></path></svg>
+          {{ end }}
+        </div>
+        {{ else }}
+        <div class="tl-yellow-glow absolute inset-0 w-8 h-8 rounded-full blur-md transition-all duration-300"></div>
+        <div class="tl-yellow-ring relative w-8 h-8 bg-white dark:bg-gray-900 border-2 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
+          {{ $icon := index $item "icon" }}
+          {{ if $icon }}
+            {{ partial "functions/get_icon" (dict "name" $icon "attributes" "class='tl-yellow-icon w-4 h-4'") }}
+          {{ else }}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 256 256" class="tl-yellow-icon w-4 h-4"><path d="M216,56H176V48a24,24,0,0,0-24-24H104A24,24,0,0,0,80,48v8H40A16,16,0,0,0,24,72V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V72A16,16,0,0,0,216,56ZM96,48a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM216,72v41.61A184,184,0,0,1,128,136a184.07,184.07,0,0,1-88-22.38V72Zm0,128H40V131.64A200.19,200.19,0,0,0,128,152a200.25,200.25,0,0,0,88-20.37V200ZM104,112a8,8,0,0,1,8-8h32a8,8,0,0,1,0,16H112A8,8,0,0,1,104,112Z"></path></svg>
+          {{ end }}
+        </div>
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="resume-slot__card {{ if $is_highlight }}exp-highlight__card {{ else }}tl-yellow-card {{ end }}relative bg-white dark:bg-white/[0.02] backdrop-blur-sm rounded-xl border border-gray-200 dark:border-white/[0.06] p-5 hover:bg-gray-50 dark:hover:bg-white/[0.04] {{ if not $is_highlight }}transition-all duration-300 group-hover:translate-x-1{{ end }} shadow-sm dark:shadow-none">
+      <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
+        <div>
+          <h3 class="text-xl font-bold text-gray-900 dark:text-white {{ if not $is_highlight }}tl-yellow-title {{ end }}transition-colors">
+            {{ if $is_highlight }}<span class="high-mark high-mark--red">{{ index $item "role" }}</span>{{ else }}{{ index $item "role" }}{{ end }}
+          </h3>
+          <p class="tl-yellow-text font-medium mt-1">
+            {{ index $item "org" }}
+          </p>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 shrink-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <time>
+            {{ $start := index $item "start" }}
+            {{ $end := index $item "end" }}
+            {{ if $start }}
+              {{ $parsed := try (time $start) }}
+              {{ if not $parsed.Err }}{{ $parsed.Value | time.Format $date_format }} –{{ else }}{{ $start }} –{{ end }}
+            {{ end }}
+            {{ if $end }}
+              {{ $parsed := try (time $end) }}
+              {{ if not $parsed.Err }}{{ $parsed.Value | time.Format $date_format }}{{ else }}{{ $end }}{{ end }}
+            {{ else }}
+              <span class="tl-yellow-text font-medium">{{ i18n "present" | default "Present" }}</span>
+            {{ end }}
+          </time>
+        </div>
+      </div>
+
+      {{ with index $item "summary" }}
+      <div class="prose dark:prose-invert max-w-none text-gray-600 dark:text-gray-400 leading-relaxed">
+        {{ . | emojify | $page.RenderString }}
+      </div>
+      {{ end }}
+
+      {{ with index $item "tags" }}
+      <div class="flex flex-wrap gap-2 mt-3">
+        {{ range . }}
+        <span class="px-2.5 py-1 text-xs font-medium rounded-full tl-yellow-tag">{{ . }}</span>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      {{ $button := index $item "button" }}
+      {{ if reflect.IsMap $button }}
+        {{ $button_url := index $button "url" }}
+        {{ $button_text := index $button "text" | default "Learn more" }}
+        {{ $button_icon := index $button "icon" }}
+        {{ if $button_url }}
+        {{ $button_link := $button_url }}
+        {{ $button_target := "" }}
+        {{ $button_scheme := (urls.Parse $button_link).Scheme }}
+        {{ if not $button_scheme }}
+          {{ if not (hasPrefix $button_link "#") }}{{ $button_link = $button_link | relLangURL }}{{ end }}
+          {{ if eq (path.Ext $button_link) ".pdf" }}{{ $button_target = "target=\"_blank\" rel=\"noopener\"" }}{{ end }}
+        {{ else if in (slice "http" "https") $button_scheme }}
+          {{ $button_target = "target=\"_blank\" rel=\"noopener\"" }}
+        {{ end }}
+        <div class="resume-card-divider flex-1 flex items-center min-h-4 mt-3">
+          <div class="w-full border-t border-gray-100 dark:border-white/5"></div>
+        </div>
+        <div class="pt-3">
+          <a href="{{ $button_link | safeURL }}" {{ $button_target | safeHTMLAttr }} class="inline-flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-gray-400 tl-yellow-link transition-colors">
+            {{ with $button_icon }}{{ partial "functions/get_icon" (dict "name" . "attributes" "class='w-4 h-4'") }}{{ end }}
+            {{ $button_text }}
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+          </a>
+        </div>
+        {{ end }}
+      {{ end }}
+    </div>
+  </div>
+</div>

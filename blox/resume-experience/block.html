@@ -1,0 +1,198 @@
+{{/* Hugo Blox: Experience - 2026 Redesign */}}
+{{/* Documentation: https://hugoblox.com/blocks/ */}}
+{{/* License: https://github.com/HugoBlox/kit/blob/main/LICENSE.md */}}
+
+{{/* Initialise */}}
+{{ $page := .wcPage }}
+{{ $block := .wcBlock }}
+{{ $content := $block.content }}
+{{ if not (reflect.IsMap $content) }}{{ $content = dict }}{{ end }}
+{{ $design := $block.design }}
+{{ if not (reflect.IsMap $design) }}{{ $design = dict }}{{ end }}
+
+{{ $text := "" }}
+{{ $text_raw := index $content "text" }}
+{{ if $text_raw }}{{ $text = strings.TrimSpace (printf "%v" $text_raw) }}{{ end }}
+{{ if $text }}{{ $text = $text | emojify | $page.RenderString }}{{ end }}
+
+{{ $username := "me" }}
+{{ $username_raw := index $content "username" }}
+{{ if eq (printf "%T" $username_raw) "string" }}
+  {{ $username = strings.TrimSpace $username_raw }}
+{{ end }}
+{{ $profile := partial "functions/get_author_profile" $username }}
+
+{{ $is_education_first := partial "functions/coerce_bool" (dict "value" (index $design "is_education_first") "default" false) }}
+{{ $date_format := "Jan 2006" }}
+{{ $date_format_raw := index $design "date_format" }}
+{{ if eq (printf "%T" $date_format_raw) "string" }}
+  {{ $date_format = strings.TrimSpace $date_format_raw | default "Jan 2006" }}
+{{ end }}
+
+{{ $experience_raw := or $profile.experience $profile.work }}
+{{ $experience_iter := slice }}
+{{ if reflect.IsSlice $experience_raw }}
+  {{ $experience_iter = $experience_raw }}
+{{ else if and $experience_raw (reflect.IsMap $experience_raw) }}
+  {{ $experience_iter = slice $experience_raw }}
+{{ end }}
+
+{{ $experience := slice }}
+{{ if gt (len $experience_iter) 0 }}
+  {{ range $experience_iter }}
+    {{ if reflect.IsMap . }}
+      {{ $role := "" }}
+      {{ $org := "" }}
+      {{ $start := "" }}
+      {{ $end := "" }}
+      {{ $summary := "" }}
+      {{ $icon := "" }}
+      {{ $kind := "" }}
+      {{ $tags := slice }}
+      {{ $button_url := "" }}
+      {{ $button_text := "" }}
+      {{ $button_icon := "" }}
+
+      {{ with index . "role" }}{{ $role = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $role }}{{ with index . "position" }}{{ $role = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "org" }}{{ $org = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $org }}{{ with index . "company_name" }}{{ $org = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "start" }}{{ $start = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $start }}{{ with index . "date_start" }}{{ $start = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "end" }}{{ $end = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $end }}{{ with index . "date_end" }}{{ $end = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "summary" }}{{ $summary = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "icon" }}{{ $icon = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "kind" }}{{ $kind = lower (strings.TrimSpace (printf "%v" .)) }}{{ end }}
+
+      {{ $tags_raw := index . "tags" }}
+      {{ if reflect.IsSlice $tags_raw }}
+        {{ range $tags_raw }}
+          {{ $tag := strings.TrimSpace (printf "%v" .) }}
+          {{ if $tag }}{{ $tags = $tags | append $tag }}{{ end }}
+        {{ end }}
+      {{ else if eq (printf "%T" $tags_raw) "string" }}
+        {{ $tag_string := strings.TrimSpace $tags_raw }}
+        {{ if $tag_string }}
+          {{ if strings.Contains $tag_string "," }}
+            {{ range (split $tag_string ",") }}
+              {{ $tag := strings.TrimSpace . }}
+              {{ if $tag }}{{ $tags = $tags | append $tag }}{{ end }}
+            {{ end }}
+          {{ else }}
+            {{ $tags = slice $tag_string }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+      {{ $button_raw := index . "button" }}
+      {{ if reflect.IsMap $button_raw }}
+        {{ with index $button_raw "url" }}{{ $button_url = strings.TrimSpace (printf "%v" .) }}{{ end }}
+        {{ with index $button_raw "text" }}{{ $button_text = strings.TrimSpace (printf "%v" .) }}{{ end }}
+        {{ with index $button_raw "icon" }}{{ $button_icon = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ end }}
+
+      {{ if or $role $org }}
+        {{ $experience = $experience | append (dict "role" $role "org" $org "start" $start "end" $end "summary" $summary "icon" $icon "kind" $kind "tags" $tags "button" (dict "url" $button_url "text" $button_text "icon" $button_icon)) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $education_raw := $profile.education }}
+{{ $education_iter := slice }}
+{{ if reflect.IsSlice $education_raw }}
+  {{ $education_iter = $education_raw }}
+{{ else if and $education_raw (reflect.IsMap $education_raw) }}
+  {{ $education_iter = slice $education_raw }}
+{{ end }}
+
+{{ $education := slice }}
+{{ if gt (len $education_iter) 0 }}
+  {{ range $education_iter }}
+    {{ if reflect.IsMap . }}
+      {{ $degree := "" }}
+      {{ $institution := "" }}
+      {{ $start := "" }}
+      {{ $end := "" }}
+      {{ $summary := "" }}
+      {{ $icon := "" }}
+      {{ $button_url := "" }}
+      {{ $button_text := "" }}
+      {{ $button_icon := "" }}
+      {{ $kind := "" }}
+      {{ $footnote := "" }}
+      {{ $year := "" }}
+
+      {{ with index . "degree" }}{{ $degree = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $degree }}{{ with index . "area" }}{{ $degree = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "institution" }}{{ $institution = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "start" }}{{ $start = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $start }}{{ with index . "date_start" }}{{ $start = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "end" }}{{ $end = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ if not $end }}{{ with index . "date_end" }}{{ $end = strings.TrimSpace (printf "%v" .) }}{{ end }}{{ end }}
+      {{ with index . "summary" }}{{ $summary = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "icon" }}{{ $icon = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "kind" }}{{ $kind = lower (strings.TrimSpace (printf "%v" .)) }}{{ end }}
+      {{ with index . "footnote" }}{{ $footnote = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ with index . "year" }}{{ $year = strings.TrimSpace (printf "%v" .) }}{{ end }}
+
+      {{ $button_raw := index . "button" }}
+      {{ if reflect.IsMap $button_raw }}
+        {{ with index $button_raw "url" }}{{ $button_url = strings.TrimSpace (printf "%v" .) }}{{ end }}
+        {{ with index $button_raw "text" }}{{ $button_text = strings.TrimSpace (printf "%v" .) }}{{ end }}
+        {{ with index $button_raw "icon" }}{{ $button_icon = strings.TrimSpace (printf "%v" .) }}{{ end }}
+      {{ end }}
+
+      {{ if or $degree $institution }}
+        {{ $education = $education | append (dict "degree" $degree "institution" $institution "start" $start "end" $end "summary" $summary "icon" $icon "kind" $kind "footnote" $footnote "year" $year "button" (dict "url" $button_url "text" $button_text "icon" $button_icon)) }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $edu_first_class := "" }}
+{{ if $is_education_first }}{{ $edu_first_class = "edu-first" }}{{ end }}
+
+{{ $row_count := len $experience }}
+{{ if gt (len $education) $row_count }}{{ $row_count = len $education }}{{ end }}
+
+<div class="resume-exp-edu mx-auto w-full px-4 sm:px-6 lg:px-8">
+  <div class="resume-exp-edu-grid">
+
+    {{ if gt (len $experience) 0 }}
+    <h2 class="resume-title-exp {{ $edu_first_class }} text-3xl font-bold text-gray-900 dark:text-white text-center">{{ i18n "experience" | default "Experience" }}</h2>
+    {{ end }}
+    {{ if gt (len $education) 0 }}
+    <h2 class="resume-title-edu {{ $edu_first_class }} text-3xl font-bold text-gray-900 dark:text-white text-center">{{ i18n "education" | default "Education" }}</h2>
+    {{ end }}
+
+    {{ if and (gt (len $experience) 0) (gt $row_count 0) }}
+    <div class="resume-rail resume-rail-exp {{ $edu_first_class }}" style="grid-row: 2 / span {{ $row_count }}" aria-hidden="true">
+      <div class="exp-timeline-line"></div>
+    </div>
+    {{ end }}
+    {{ if and (gt (len $education) 0) (gt $row_count 0) }}
+    <div class="resume-rail resume-rail-edu {{ $edu_first_class }}" style="grid-row: 2 / span {{ $row_count }}" aria-hidden="true">
+      <div class="edu-timeline-line"></div>
+    </div>
+    {{ end }}
+
+    {{ if gt $row_count 0 }}
+      {{ range $i := seq 0 (sub $row_count 1) }}
+        {{ $grid_row := add $i 2 }}
+        {{ if lt $i (len $experience) }}
+          {{ partial "resume-exp-card.html" (dict "page" $page "item" (index $experience $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row) }}
+        {{ else }}
+          <div class="resume-cell resume-cell--exp {{ $edu_first_class }}" style="grid-row: {{ $grid_row }}"></div>
+        {{ end }}
+        {{ if lt $i (len $education) }}
+          {{ partial "resume-edu-card.html" (dict "page" $page "item" (index $education $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row) }}
+        {{ else }}
+          <div class="resume-cell resume-cell--edu {{ $edu_first_class }}" style="grid-row: {{ $grid_row }}"></div>
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+  </div>
+</div>

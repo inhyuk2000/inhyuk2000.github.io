@@ -331,4 +331,6 @@ extract_allow_target
 ### 3. Merge Logic Evaluation
 - 평가 영역 : `TargetFixed`
 
+{{% high_mark %}}**LangChain, LangGraph, LangSmith 활용해서 강의의 OpenTelemetry와 같은 기능 구현 필요할 듯**{{% /high_mark %}}
+
 [**GPT 답변 내용**](https://chatgpt.com/share/6a7b6ba5-e430-83ee-8772-8a2b18b7b8e4)

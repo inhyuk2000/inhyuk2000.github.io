@@ -103,47 +103,65 @@ diagram: true
 
 ```mermaid
 flowchart TB
+  user((User))
+  router["Router<br/>GPT-4o w/<br/>function calling"]
 
-  U["User<br/>Natural Language Request<br/>예: 학교에서 공부할 때 카카오톡 알림 꺼줘"]
-  UI["Android UI<br/>ChatScreen / ChatRoute"]
+  user -->|chat command| router
+  router -->|reply| user
 
-  PE["Condition Extractor<br/>PromptEngine"]
-  LLM["OpenAI API<br/>gpt-4o + ToolChoice.Auto"]
-  TOOLS["Function Calling<br/>extract_notification_condition<br/>extract_mute_target / extract_allow_target"]
-  MAP["AppNameMapper<br/>앱 이름 → package"]
-  SC["Structured Conditions<br/>Time · App · Keyword · Mode mute/allow<br/>recurrence / window"]
+  parse[Parse User Intent]
+  choose[Choose mute / allow tool]
+  router --> parse --> choose
 
-  CM["Notification Manager<br/>ContextManager"]
-  DB[("SQLite<br/>DBHelper · ContextManager table")]
-  CHK["MyChecker<br/>10s periodicDeliveryCheck"]
+  cond["extract_notification_condition<br/>(time / recurrence)"]
+  mute["extract_mute_target<br/>(name / content)"]
+  allow["extract_allow_target<br/>(name / content)"]
 
-  NLS["Android NotificationListenerService<br/>NotificationListener"]
-  DEC{"Allow / Hold?"}
-  ALLOW["Allow / Deliver<br/>sendDelayedNotification"]
-  HOLD["Block / Hold<br/>storePendingNotif"]
+  choose -->|function call| cond
+  choose -->|function call| mute
+  choose -->|function call| allow
 
-  FB["Firebase Remote Log<br/>FirebaseRemoteLog → RTDB<br/>rule_events / notif_events"]
+  c1[Infer delivery / expires]
+  c2[Set recurrence / window]
+  m1[Extract mute apps / keywords]
+  m2[Normalize app names]
+  a1[Extract mute apps / keywords]
+  a2[Normalize app names]
 
-  U -->|자연어 요청| UI
-  UI -->|promptEngine.handle| PE
+  cond --> c1 --> c2
+  mute --> m1 --> m2
+  allow --> a1 --> a2
 
-  PE --> LLM
-  LLM --> TOOLS
-  TOOLS --> MAP
-  MAP --> SC
+  c2 -.->|tool result| router
+  m2 -.->|tool result| router
+  a2 -.->|tool result| router
 
-  SC -->|handleIncomingRule| CM
+  merge["PromptEngine Merge<br/>(target + condition)"]
+  inj[Inject mute flag]
+  build[Build target JSON]
+  cm[ContextManager]
+  mapPkg[Map app name to package]
+  validate[Validate delivery before expires]
+  save[Save rule to SQLite]
+  db[(SQLite)]
 
-  CM --> DB
-  CM --> CHK
+  router -->|two JSONs| merge
+  merge --> inj --> build --> cm --> mapPkg --> validate --> save
+  save -->|Persist mode / apps / window| db
 
-  NLS -->|onNotificationPosted / featureEnabled| CM
-  CM -->|handleIncomingNotif| DEC
-
-  DEC -->|match mute/allow| HOLD
-  DEC -->|deliver| ALLOW
-
-  CM -.->|logRuleEvent / logNotifEvent| FB
+  classDef userNode fill:#7eb8da,stroke:#4a90b8,color:#fff
+  classDef routerNode fill:#e8a0a0,stroke:#c07070,color:#222
+  classDef stepRed fill:#fff5f5,stroke:#c07070,color:#b33
+  classDef toolNode fill:#90c9a0,stroke:#5a9a6a,color:#222
+  classDef stepGreen fill:#f3faf5,stroke:#5a9a6a,color:#2a7a3a
+  classDef dbNode fill:#a8d5b5,stroke:#5a9a6a,color:#222
+  class user userNode
+  class router routerNode
+  class parse,choose,c1,c2,m1,m2,a1,a2 stepRed
+  class cond,mute,allow toolNode
+  class merge,cm stepGreen
+  class inj,build,mapPkg,validate,save stepGreen
+  class db dbNode
 ```
 
 ## Evaluation

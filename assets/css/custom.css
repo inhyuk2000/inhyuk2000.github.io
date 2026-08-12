@@ -116,9 +116,9 @@ article main .prose .schema-tool-pre,
   }
 }
 
-/* Mermaid diagrams: a bit smaller than the full text column */
+/* Mermaid diagrams: wide enough for architecture flowcharts */
 article main .prose .mermaid {
-  max-width: min(42rem, 100%);
+  max-width: min(72rem, 100%);
   margin-inline: auto;
   overflow-x: auto;
 }

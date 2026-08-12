@@ -77,3 +77,20 @@ featured: true
 
   * 알림 허용과 차단 로직 중 어느 쪽에서 오류가 많이 발생하는지 확인
   * 규칙 처리 로직의 구조적 차이에서 발생하는 문제 탐색
+
+
+### 1. Condition Evaluation
+- 평가 영역 : `delivery`, `expires`, `activity`, `loaction`, `recurrence`, `days_od_week`, `window_start`, `window_end`
+
+### 2. Target Evaluation
+- 평가 영역 : `name`, `content`, `Tool Selection Accuracy`
+- {{% high_mark %}}**Tool Selection Accuracy**{{% /high_mark %}}
+  - mute 요청인데 정말 `extract_mute_target`을 호출했는가?
+  - allow 요청인데 정말 `extract_allow_target`을 호출했는가?
+
+### 3. Merge Logic Evaluation
+- 평가 영역 : `TargetFixed`
+
+{{% high_mark %}}**LangChain, LangGraph, LangSmith 활용해서 강의의 OpenTelemetry와 같은 기능 구현 필요할 듯**{{% /high_mark %}}
+
+[**GPT 답변 내용**](https://chatgpt.com/share/6a7b6ba5-e430-83ee-8772-8a2b18b7b8e4)

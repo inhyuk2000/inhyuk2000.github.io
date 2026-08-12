@@ -191,8 +191,8 @@ sections:
           title: NotiLLM
         - id: coding-test
           title: Coding Test
-        - id: interview-feedback
-          title: Interview Feedback
+        - id: feedback
+          title: Feedback
         - id: multiagent
           title: MultiAgent
         - id: schedule

@@ -5,6 +5,7 @@ summary: "애자일소다 서류 및 1차 면접 기록"
 tags:
   - Business
   - Test
+  - Interview
 authors:
   - me
 featured: true

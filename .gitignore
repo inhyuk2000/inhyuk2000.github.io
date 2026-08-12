@@ -55,6 +55,10 @@ netlify/functions/agent-context.json
 pagefind/
 static/pagefind/
 
+# Local-only blog posts (not pushed to GitHub)
+# Put them under: content/blog/<topic>/private/<post-name>/
+content/blog/**/private/
+
 # ============================================================================
 # Operating System
 # ============================================================================

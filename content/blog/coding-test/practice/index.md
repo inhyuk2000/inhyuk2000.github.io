@@ -11,6 +11,7 @@ featured: true
 ---
 
 {{% high_mark %}}**프로그래머스**{{% /high_mark %}}
+[문제 링크](https://school.programmers.co.kr/learn/challenges?tab=algorithm_practice_kit)
 
 >[!important] [Step1] 최소직사각형
 

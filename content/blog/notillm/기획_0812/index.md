@@ -36,3 +36,86 @@ FastAPI 기반 AI Backend의 핵심 로직은 크게 {{% high_mark %}}**다음 4
 
 ![**LangSmith 결과화면**](./image.png)
 > `handle` 함수안의 두 `ChatOpenAI.invoke` 함수를 자동으로 추적하고 있는 것을 확인할 수 있었다!
+
+### Code-based Evaluation 설계 과정
+- `evals` 폴더 생성 후, 평가에 사용할 샘플 5개 **JSON 데이터셋(input, output)** 생성
+- `dataset_upload.py` : Jsonl 확장자 파일에서 정의한 데이터셋을 **LangSmith Dataset**에 업로드
+- `System Few Shot` 부분도 전체적으로 어떻게 프롬프팅 했는지 점검해봐야 함.
+- `evaluators.py` 파일과 `run_experiment.py` 파일 생성해서 LangSmith 기반 테스트 진행함. (정답률 : 100%, 샘플 5개 적용)
+
+### Evaluators.py 코드에 대해서..
+
+```python
+def extract_rule_correctness(
+    outputs: dict,
+    reference_outputs: dict,
+) -> dict:
+    
+    """
+    ExtractRule JSON 정답 일치도 (binary code metric).
+    LangSmith evaluate()가 Example마다 호출:
+      outputs            ← Target(handle) 반환값
+      reference_outputs  ← Dataset example.outputs
+    Returns:
+      key/score 형태 dict — UI 지표명과 0~1 점수
+      comment — 필드별 pass/fail (디버깅용)
+
+    delivery/expires 는 currentTime이 고정이므로 ISO 문자열 exact match.
+    """
+    
+    pred = outputs or {}
+    exp = reference_outputs or {}
+    checks: dict[str, bool] = {}
+
+    # ok (성공/실패) — router 성격
+    checks["ok"] = bool(pred.get("ok")) == bool(exp.get("ok"))
+
+    # 정답이 실패면 구조 필드 없음 → ok만 채점
+    # 예: "카톡만 받아줘" (시간 없음) → ok=false
+    if not exp.get("ok"):
+        return {
+            "key": "extract_rule_correctness",
+            "score": 1.0 if checks["ok"] else 0.0,
+            "comment": str(checks),
+        }
+
+    # 성공 정답 → targetFixed / condition 필드 비교
+    # 정답에 있는 키만 검사 (부분 reference 허용)
+    pt = pred.get("targetFixed") or {}
+    et = exp.get("targetFixed") or {}
+    pc = pred.get("condition") or {}
+    ec = exp.get("condition") or {}
+
+    if "mute" in et:
+        checks["mute"] = bool(pt.get("mute")) == bool(et.get("mute"))
+    if "name" in et:
+        checks["name"] = _as_set(pt.get("name")) == _as_set(et.get("name"))
+    if "content" in et:
+        checks["content"] = _as_set(pt.get("content")) == _as_set(et.get("content"))
+    if "recurrence" in ec:
+        checks["recurrence"] = pc.get("recurrence") == ec.get("recurrence")
+    if "delivery" in ec:
+        checks["delivery"] = _abs(pc.get("delivery")) == _abs(ec.get("delivery"))
+    if "expires" in ec:
+        checks["expires"] = _abs(pc.get("expires")) == _abs(ec.get("expires"))
+
+    passed = all(checks.values()) if checks else False
+
+    return {
+        "key": "extract_rule_correctness",
+        "score": 1.0 if passed else 0.0,
+        "comment": str(checks),
+    }
+```
+
+- `LangSmith`에서 `Target(handle)` 반환값과 `Dataset example.outputs` 의 결과값을 비교해 `0, 1` 점(binary)으로 수치화함.
+- `handle` 함수의 결과값 JSON 필드는 예상과 정확하게 나와야 하기 때문에, {{% high_mark %}}**Code Based Evaluation**{{% /high_mark %}} 을 진행함.
+
+### Dataset 생성
+- 예전 학부연구생 생활하면서, 같은 연구실 동기들에게 받은 32개의 예시에는 `ok=False`가 너무 많아 평가가 편향될 것으로 예상되어, 10개로 줄였다.
+- `ok = True` 는 40개 / `ok = False` 는 10개로 개수를 맞춰 테스트를 진행할 예정이다.
+- 본 Evaluation에서는 사용자 자연어 요청으로부터 앱, 콘텐츠, 알림 허용/차단 및 시간 조건을 구조화된 JSON으로 정확하게 추출하는지를 검증하며, {{% high_mark %}}**콘텐츠의 의미적 분류 정확도는 평가 범위에서 제외**{{% /high_mark %}}한다.
+
+![**LangSmith 결과화면**](./image2.png)
+- 의미적 분류 정확도는 현재 오류로 검증하지 않았지만, **개선 사항**임.
+- `extra_rule_correctness` = 0.76 : 왜 이 테스트 결과값이 나왔는지 점검 해봐야 한다.

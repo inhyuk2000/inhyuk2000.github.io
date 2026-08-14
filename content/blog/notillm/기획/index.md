@@ -35,19 +35,19 @@ diagram: true
       <td><small>Ground Truth Dataset</small></td>
       <td><small>LLM Evaluation</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(255, 215, 0, 0.18);">
       <td style="text-align:center;"><small><strong>3</strong></small></td>
       <td><small>자동 Evaluation 구현</small></td>
       <td><small>평가 코드 + 지표</small></td>
       <td><small>AI Engineering</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(30, 194, 209, 0.18)">
       <td style="text-align:center;"><small><strong>4</strong></small></td>
       <td><small>Error Analysis</small></td>
       <td><small>실패 유형/원인</small></td>
       <td><small>Problem Solving</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(30, 194, 209, 0.18)">
       <td style="text-align:center;"><small><strong>5</strong></small></td>
       <td><small>구조/Prompt 개선</small></td>
       <td><small>v2</small></td>

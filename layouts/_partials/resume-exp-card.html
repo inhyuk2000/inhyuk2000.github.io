@@ -7,12 +7,19 @@
 {{ $date_format := .date_format }}
 {{ $edu_first_class := .edu_first_class | default "" }}
 {{ $grid_row := .grid_row | default 0 }}
+{{ $reveal_index := .reveal_index | default 0 }}
+{{ $reveal_total := .reveal_total | default 1 }}
 {{ $is_highlight := eq (index $item "kind") "highlight" }}
 
 <div class="resume-cell resume-cell--exp{{ with $edu_first_class }} {{ . }}{{ end }}"{{ if $grid_row }} style="grid-row: {{ $grid_row }}"{{ end }}>
-  <div class="resume-slot group relative pl-12 sm:pl-16 h-full{{ if $is_highlight }} exp-highlight{{ end }}">
+  <div
+    class="resume-slot resume-reveal-slot group relative pl-12 sm:pl-16 h-full{{ if $is_highlight }} exp-highlight{{ end }}"
+    data-resume-rail="exp"
+    data-reveal-index="{{ $reveal_index }}"
+    data-reveal-total="{{ $reveal_total }}"
+  >
     <div class="absolute left-0 sm:left-2 top-6 flex items-center justify-center z-[1]">
-      <div class="relative">
+      <div class="resume-reveal-icon relative">
         {{ if $is_highlight }}
         <div class="tl-yellow-glow absolute inset-0 w-8 h-8 rounded-full blur-md transition-colors duration-200"></div>
         <div class="tl-yellow-ring relative w-8 h-8 bg-white dark:bg-gray-900 border-2 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-105">
@@ -37,7 +44,7 @@
       </div>
     </div>
 
-    <div class="resume-slot__card {{ if $is_highlight }}exp-highlight__card {{ else }}tl-yellow-card {{ end }}relative bg-white dark:bg-white/[0.02] backdrop-blur-sm rounded-xl border border-gray-200 dark:border-white/[0.06] p-5 hover:bg-gray-50 dark:hover:bg-white/[0.04] {{ if not $is_highlight }}transition-all duration-300 group-hover:translate-x-1{{ end }} shadow-sm dark:shadow-none">
+    <div class="resume-slot__card resume-reveal-card {{ if $is_highlight }}exp-highlight__card {{ else }}tl-yellow-card {{ end }}relative bg-white dark:bg-white/[0.02] backdrop-blur-sm rounded-xl border border-gray-200 dark:border-white/[0.06] p-5 hover:bg-gray-50 dark:hover:bg-white/[0.04] {{ if not $is_highlight }}group-hover:translate-x-1{{ end }} shadow-sm dark:shadow-none">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
         <div>
           <h3 class="text-xl font-bold text-gray-900 dark:text-white {{ if not $is_highlight }}tl-yellow-title {{ end }}transition-colors">

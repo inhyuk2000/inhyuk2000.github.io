@@ -212,8 +212,12 @@
   </div>
   {{ end }}
 
-  {{/* Project Grid with staggered reveal animation */}}
-  <div class="grid grid-cols-1 {{ $grid_class }} gap-6" data-stagger="100">
+  {{/* Project Grid — scroll reveal by row (3 cards on lg) */}}
+  <div
+    class="portfolio-reveal-grid grid grid-cols-1 {{ $grid_class }} gap-6"
+    data-portfolio-reveal
+    data-cols-lg="{{ $columns }}"
+  >
     {{ range $index, $item := $query }}
       {{ $item_key := $item.RelPermalink }}
       {{ $card_allowed_filters := index $allowed_map $item_key }}
@@ -288,7 +292,8 @@
         x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 scale-95 translate-y-4"
         x-transition:enter-end="opacity-100 scale-100 translate-y-0"
-        class="group relative flex flex-col bg-white dark:bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-white/[0.08] overflow-hidden hover:border-primary-500/50 hover:bg-gray-50 dark:hover:bg-white/[0.06] transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/10 card-hover-lift"
+        class="portfolio-reveal-card group relative flex flex-col bg-white dark:bg-white/[0.03] backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-white/[0.08] overflow-hidden hover:border-primary-500/50 hover:bg-gray-50 dark:hover:bg-white/[0.06] hover:shadow-xl hover:shadow-primary-500/10 card-hover-lift"
+        data-reveal-index="{{ $index }}"
       >
         {{/* Card Header / Image */}}
         <div class="relative h-48 overflow-hidden">
@@ -541,3 +546,7 @@
     </div>
   {{ end }}
 </div>
+
+{{ with resources.Get "js/portfolio-reveal.js" }}
+  <script src="{{ .RelPermalink }}" defer></script>
+{{ end }}

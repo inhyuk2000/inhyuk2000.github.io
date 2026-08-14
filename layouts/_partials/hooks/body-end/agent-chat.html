@@ -1,13 +1,21 @@
 {{/* Floating portfolio Agent chat — injected site-wide via HugoBlox body-end hook */}}
-<div id="agent-chat-root" class="agent-chat" data-open="false">
+{{ $agent_avatar := "" }}
+{{ with resources.Get "media/authors/me3.jpg" }}
+  {{ $agent_avatar = (.Fill "96x96 Center").RelPermalink }}
+{{ end }}
+<div
+  id="agent-chat-root"
+  class="agent-chat"
+  data-open="false"
+  {{ with $agent_avatar }}data-agent-avatar="{{ . }}"{{ end }}
+>
   <div id="agent-chat-panel" class="agent-chat__panel" data-agent-panel hidden>
     <header class="agent-chat__header">
       <div class="agent-chat__title-wrap">
-        {{ with resources.Get "media/authors/me3.jpg" }}
-          {{ $avatar := .Fill "96x96 Center" }}
+        {{ with $agent_avatar }}
           <img
             class="agent-chat__avatar"
-            src="{{ $avatar.RelPermalink }}"
+            src="{{ . }}"
             alt="In Hyuk"
             width="36"
             height="36"
@@ -57,6 +65,7 @@
     aria-controls="agent-chat-panel"
     aria-label="Open Agent chat"
   >
+    <span class="agent-chat__badge" data-agent-badge hidden aria-hidden="true">1</span>
     <svg class="agent-chat__fab-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
@@ -65,5 +74,6 @@
 </div>
 
 {{ with resources.Get "js/agent-chat.js" }}
-  <script src="{{ .RelPermalink }}" defer></script>
+  {{ $js := . | resources.Fingerprint "sha256" }}
+  <script src="{{ $js.RelPermalink }}" defer integrity="{{ $js.Data.Integrity }}"></script>
 {{ end }}

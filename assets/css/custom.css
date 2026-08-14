@@ -152,6 +152,56 @@ html:not(.dark) .high-mark.high-mark--red {
   background-image: linear-gradient(transparent 48%, rgba(94, 234, 212, 0.55) 48%);
 }
 
+/* Hero bio marker — yellow, paint L→R on load */
+.high-mark.high-mark--mint {
+  background-image: linear-gradient(transparent 48%, rgba(212, 160, 50, 0.55) 48%);
+  background-size: 0% 100%;
+  background-position: left center;
+  background-repeat: no-repeat;
+  animation: high-mark-paint 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+html:not(.dark) .high-mark.high-mark--mint {
+  background-image: linear-gradient(transparent 48%, #ffe566 48%);
+}
+
+.high-mark.high-mark--mint[data-mark-seq="0"] {
+  animation-delay: 0s;
+}
+
+.high-mark.high-mark--mint[data-mark-seq="1"] {
+  animation-delay: 0.5s;
+}
+
+.high-mark.high-mark--mint[data-mark-seq="2"] {
+  animation-delay: 1s;
+}
+
+.high-mark.high-mark--mint[data-mark-seq="3"] {
+  animation-delay: 1.5s;
+}
+
+.high-mark.high-mark--mint,
+.high-mark.high-mark--mint strong {
+  color: #ffffff;
+}
+
+@keyframes high-mark-paint {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .high-mark.high-mark--mint {
+    background-size: 100% 100%;
+    animation: none;
+  }
+}
+
 /* Portfolio card badges — plain CSS so colors don't depend on Tailwind scan of blox/ */
 .portfolio-badge {
   display: inline-flex;
@@ -165,6 +215,86 @@ html:not(.dark) .high-mark.high-mark--red {
   border-width: 1px;
   border-style: solid;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
+}
+
+/* Project cards: scroll reveal by row (3 on lg, 2 on md, 1 on mobile) */
+.portfolio-reveal-grid .portfolio-reveal-card {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.portfolio-reveal-grid .portfolio-reveal-card.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tech Stack: reveal whole category (same motion as project rows) */
+.tech-reveal-list .tech-reveal-category {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.tech-reveal-list .tech-reveal-category.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Learning Garden / Contact / CTA — same Project fade-up motion */
+.scroll-reveal-item {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.scroll-reveal-item.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-reveal-grid .portfolio-reveal-card {
+    opacity: 1;
+    transform: none;
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .tech-reveal-list .tech-reveal-category {
+    opacity: 1;
+    transform: none;
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
+  .scroll-reveal-item {
+    opacity: 1;
+    transform: none;
+    transition:
+      border-color 0.3s ease,
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
 }
 
 .portfolio-badge-award {
@@ -193,15 +323,15 @@ html:not(.dark) .high-mark.high-mark--red {
 
 /* ── Portfolio Agent chat widget ── */
 .agent-chat {
-  --agent-bg: #12141a;
-  --agent-panel: #1a1d26;
-  --agent-border: rgba(255, 255, 255, 0.1);
+  --agent-bg: #2a2f3c;
+  --agent-panel: #343b4a;
+  --agent-border: rgba(255, 255, 255, 0.12);
   --agent-text: #f3f4f6;
-  --agent-muted: #9ca3af;
+  --agent-muted: #a8b0bd;
   --agent-accent: #3b82f6;
   --agent-user: #2563eb;
-  --agent-bot: #242833;
-  --agent-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --agent-bot: #454d5e;
+  --agent-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
   position: fixed;
   right: 1.25rem;
   bottom: 1.25rem;
@@ -234,6 +364,7 @@ html:not(.dark) .agent-chat {
 }
 
 .agent-chat__fab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -245,6 +376,59 @@ html:not(.dark) .agent-chat {
   box-shadow: var(--agent-shadow);
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.agent-chat__badge {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.3rem;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.35rem;
+  height: 1.35rem;
+  padding: 0 0.32rem;
+  border-radius: 9999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 0 0 2px #fff;
+  transform: scale(0.35);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dark .agent-chat__badge {
+  box-shadow: 0 0 0 2px #343b4a;
+}
+
+.agent-chat__badge[hidden] {
+  display: none !important;
+}
+
+.agent-chat__badge.is-visible {
+  display: inline-flex;
+  opacity: 1;
+  transform: scale(1);
+  animation: agent-badge-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes agent-badge-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .agent-chat__fab:hover {
@@ -394,10 +578,10 @@ img.agent-chat__avatar {
 .agent-chat__messages {
   flex: 1;
   overflow-y: auto;
-  padding: 0.9rem;
+  padding: 0.85rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.85rem;
   scroll-behavior: smooth;
 }
 
@@ -407,6 +591,9 @@ img.agent-chat__avatar {
 
 .agent-chat__row {
   display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  max-width: 100%;
 }
 
 .agent-chat__row--user {
@@ -415,6 +602,66 @@ img.agent-chat__avatar {
 
 .agent-chat__row--assistant {
   justify-content: flex-start;
+}
+
+.agent-chat__msg-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 9999px;
+  background: var(--agent-accent);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+img.agent-chat__msg-avatar {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+.agent-chat__msg-body {
+  min-width: 0;
+  max-width: calc(100% - 2.6rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.agent-chat__msg-name {
+  margin: 0;
+  padding-left: 0.1rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--agent-muted);
+  line-height: 1.2;
+}
+
+.agent-chat__msg-line {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.35rem;
+  max-width: 100%;
+}
+
+.agent-chat__msg-line--user {
+  justify-content: flex-end;
+  max-width: 100%;
+}
+
+.agent-chat__msg-time {
+  flex-shrink: 0;
+  font-size: 0.65rem;
+  line-height: 1.2;
+  color: var(--agent-muted);
+  white-space: nowrap;
+  padding-bottom: 0.1rem;
 }
 
 .agent-chat__row--enter {
@@ -452,21 +699,30 @@ img.agent-chat__avatar {
 }
 
 .agent-chat__bubble {
-  max-width: 85%;
-  padding: 0.65rem 0.8rem;
-  border-radius: 0.9rem;
-  font-size: 0.875rem;
-  line-height: 1.45;
+  max-width: min(15.5rem, 72%);
+  padding: 0.45rem 0.65rem;
+  border-radius: 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+.agent-chat__row--assistant .agent-chat__bubble {
+  max-width: min(15.5rem, 100%);
+}
+
+.agent-chat__row--user .agent-chat__bubble {
+  max-width: min(15.5rem, 78vw);
 }
 
 .agent-chat__bubble strong {
   font-weight: 700;
 }
 
-/* Match blog {{% high_mark %}} look inside chat bubbles */
 .agent-chat__bubble .high-mark {
+  background-image: none;
+  padding: 0;
   font-weight: 700;
 }
 
@@ -736,9 +992,15 @@ img.agent-chat__avatar {
   .agent-chat__send,
   .agent-chat__send svg,
   .agent-chat__send--pulse,
-  .agent-chat__input {
+  .agent-chat__input,
+  .agent-chat__badge {
     animation: none !important;
     transition: none !important;
+  }
+
+  .agent-chat__badge.is-visible {
+    opacity: 1;
+    transform: scale(1);
   }
 
   .agent-chat__messages {

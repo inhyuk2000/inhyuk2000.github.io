@@ -7,13 +7,20 @@
 {{ $date_format := .date_format }}
 {{ $edu_first_class := .edu_first_class | default "" }}
 {{ $grid_row := .grid_row | default 0 }}
+{{ $reveal_index := .reveal_index | default 0 }}
+{{ $reveal_total := .reveal_total | default 1 }}
 {{ $is_turning := eq (index $item "kind") "turning_point" }}
 
 <div class="resume-cell resume-cell--edu{{ with $edu_first_class }} {{ . }}{{ end }}"{{ if $grid_row }} style="grid-row: {{ $grid_row }}"{{ end }}>
 {{ if $is_turning }}
-  <div class="resume-slot group relative pl-12 sm:pl-16 h-full edu-turning-point">
+  <div
+    class="resume-slot resume-reveal-slot group relative pl-12 sm:pl-16 h-full edu-turning-point"
+    data-resume-rail="edu"
+    data-reveal-index="{{ $reveal_index }}"
+    data-reveal-total="{{ $reveal_total }}"
+  >
     <div class="absolute left-0 sm:left-2 top-6 flex items-center justify-center z-[1]">
-      <div class="relative">
+      <div class="resume-reveal-icon relative">
         <div class="tl-yellow-glow absolute inset-0 w-8 h-8 rounded-full blur-md transition-all duration-300"></div>
         <div class="tl-yellow-ring relative w-8 h-8 bg-white dark:bg-[#0b0c10] border-2 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
           <svg class="w-4 h-4 tl-yellow-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
@@ -23,7 +30,7 @@
       </div>
     </div>
 
-    <div class="resume-slot__card edu-turning-point__card relative rounded-xl border border-gray-200 dark:border-white/[0.05] bg-white dark:bg-[#13151a] p-5">
+    <div class="resume-slot__card resume-reveal-card edu-turning-point__card relative rounded-xl border border-gray-200 dark:border-white/[0.05] bg-white dark:bg-[#13151a] p-5">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
         <div class="min-w-0 flex-1">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">
@@ -58,9 +65,14 @@
     </div>
   </div>
 {{ else }}
-  <div class="resume-slot group relative pl-12 sm:pl-16 h-full">
+  <div
+    class="resume-slot resume-reveal-slot group relative pl-12 sm:pl-16 h-full"
+    data-resume-rail="edu"
+    data-reveal-index="{{ $reveal_index }}"
+    data-reveal-total="{{ $reveal_total }}"
+  >
     <div class="absolute left-0 sm:left-2 top-6 flex items-center justify-center z-[1]">
-      <div class="relative">
+      <div class="resume-reveal-icon relative">
         <div class="tl-yellow-glow absolute inset-0 w-8 h-8 rounded-full blur-md transition-all duration-300"></div>
         <div class="tl-yellow-ring relative w-8 h-8 bg-white dark:bg-gray-900 border-2 rounded-full flex items-center justify-center group-hover:scale-110 transition-all duration-300">
           {{ $icon := index $item "icon" }}
@@ -73,7 +85,7 @@
       </div>
     </div>
 
-    <div class="resume-slot__card tl-yellow-card relative bg-white dark:bg-white/[0.02] backdrop-blur-sm rounded-xl border border-gray-200 dark:border-white/[0.06] p-5 hover:bg-gray-50 dark:hover:bg-white/[0.04] transition-all duration-300 group-hover:translate-x-1 shadow-sm dark:shadow-none">
+    <div class="resume-slot__card resume-reveal-card tl-yellow-card relative bg-white dark:bg-white/[0.02] backdrop-blur-sm rounded-xl border border-gray-200 dark:border-white/[0.06] p-5 hover:bg-gray-50 dark:hover:bg-white/[0.04] group-hover:translate-x-1 shadow-sm dark:shadow-none">
       <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-2">
         <div>
           <h3 class="tl-yellow-title text-xl font-bold text-gray-900 dark:text-white transition-colors">{{ index $item "degree" }}</h3>

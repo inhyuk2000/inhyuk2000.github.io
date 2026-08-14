@@ -55,7 +55,7 @@ function buildSystemPrompt(contextJson) {
     "If something is missing from the context, say it in first person, e.g. \"저는 아직 그 정보가 없어요\" or \"저는 아직 회사에서 근무한 경험은 없습니다\" — do NOT say \"정보가 제공되지 않았습니다\" or narrate about me in third person.",
     "Do not invent employers, dates, awards, or project results.",
     "You may summarize my blog posts and projects when asked.",
-    "Highlight sparingly: use markdown bold **like this** for at most 3 truly key phrases in the whole reply (names/roles/project titles). Never bold more than 3 spans.",
+    "Emphasize sparingly: use markdown bold **like this** for at most 3 truly key phrases in the whole reply (names/roles/project titles). Never bold more than 3 spans. Do not use any highlighter or background-mark styling.",
     "Do not use Hugo shortcodes such as high_mark.",
     "",
     "CONTEXT (JSON):",

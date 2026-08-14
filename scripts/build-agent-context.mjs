@@ -8,17 +8,44 @@ const root = path.resolve(__dirname, "..");
 const BODY_LIMIT = 6000;
 const TOTAL_SOFT_LIMIT = 120_000;
 
-function walkIndexMarkdown(dir) {
+/**
+ * Collect folders that contain index.md.
+ * - shallow: content/projects/<name>/index.md
+ * - recursive: content/blog/<topic>/<post>/index.md (and deeper)
+ * Skips _*, .*, and private/ directories.
+ */
+function walkIndexMarkdown(dir, { recursive = false } = {}) {
   if (!fs.existsSync(dir)) return [];
   const results = [];
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue;
-    if (entry.name.startsWith("_") || entry.name.startsWith(".")) continue;
-    const indexPath = path.join(dir, entry.name, "index.md");
-    if (fs.existsSync(indexPath)) {
-      results.push({ slug: entry.name, filePath: indexPath });
+  const baseDir = dir;
+
+  function visit(current) {
+    let entries;
+    try {
+      entries = fs.readdirSync(current, { withFileTypes: true });
+    } catch {
+      return;
+    }
+
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      if (entry.name.startsWith("_") || entry.name.startsWith(".")) continue;
+      if (entry.name === "private") continue;
+
+      const child = path.join(current, entry.name);
+      const indexPath = path.join(child, "index.md");
+      if (fs.existsSync(indexPath)) {
+        const rel = path.relative(baseDir, child).split(path.sep).join("/");
+        results.push({ slug: rel || entry.name, filePath: indexPath });
+      }
+
+      if (recursive) {
+        visit(child);
+      }
     }
   }
+
+  visit(dir);
   return results.sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
@@ -104,9 +131,9 @@ function main() {
     ? fs.readFileSync(authorPath, "utf8")
     : "";
 
-  const blogs = walkIndexMarkdown(path.join(root, "content", "blog")).map((e) =>
-    loadEntry(e, "blog"),
-  );
+  const blogs = walkIndexMarkdown(path.join(root, "content", "blog"), {
+    recursive: true,
+  }).map((e) => loadEntry(e, "blog"));
   const projects = walkIndexMarkdown(
     path.join(root, "content", "projects"),
   ).map((e) => loadEntry(e, "project"));

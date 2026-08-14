@@ -157,7 +157,7 @@
 {{ $row_count := len $experience }}
 {{ if gt (len $education) $row_count }}{{ $row_count = len $education }}{{ end }}
 
-<div class="resume-exp-edu mx-auto w-full px-4 sm:px-6 lg:px-8">
+<div class="resume-exp-edu mx-auto w-full px-4 sm:px-6 lg:px-8" data-resume-reveal>
   <div class="resume-exp-edu-grid">
 
     {{ if gt (len $experience) 0 }}
@@ -169,12 +169,12 @@
 
     {{ if and (gt (len $experience) 0) (gt $row_count 0) }}
     <div class="resume-rail resume-rail-exp {{ $edu_first_class }}" style="grid-row: 2 / span {{ $row_count }}" aria-hidden="true">
-      <div class="exp-timeline-line"></div>
+      <div class="exp-timeline-line resume-timeline-line" data-resume-line="exp" style="--reveal-progress: 0"></div>
     </div>
     {{ end }}
     {{ if and (gt (len $education) 0) (gt $row_count 0) }}
     <div class="resume-rail resume-rail-edu {{ $edu_first_class }}" style="grid-row: 2 / span {{ $row_count }}" aria-hidden="true">
-      <div class="edu-timeline-line"></div>
+      <div class="edu-timeline-line resume-timeline-line" data-resume-line="edu" style="--reveal-progress: 0"></div>
     </div>
     {{ end }}
 
@@ -182,12 +182,12 @@
       {{ range $i := seq 0 (sub $row_count 1) }}
         {{ $grid_row := add $i 2 }}
         {{ if lt $i (len $experience) }}
-          {{ partial "resume-exp-card.html" (dict "page" $page "item" (index $experience $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row) }}
+          {{ partial "resume-exp-card.html" (dict "page" $page "item" (index $experience $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row "reveal_index" $i "reveal_total" (len $experience)) }}
         {{ else }}
           <div class="resume-cell resume-cell--exp {{ $edu_first_class }}" style="grid-row: {{ $grid_row }}"></div>
         {{ end }}
         {{ if lt $i (len $education) }}
-          {{ partial "resume-edu-card.html" (dict "page" $page "item" (index $education $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row) }}
+          {{ partial "resume-edu-card.html" (dict "page" $page "item" (index $education $i) "date_format" $date_format "edu_first_class" $edu_first_class "grid_row" $grid_row "reveal_index" $i "reveal_total" (len $education)) }}
         {{ else }}
           <div class="resume-cell resume-cell--edu {{ $edu_first_class }}" style="grid-row: {{ $grid_row }}"></div>
         {{ end }}
@@ -196,3 +196,7 @@
 
   </div>
 </div>
+
+{{ with resources.Get "js/portfolio-reveal.js" }}
+  <script src="{{ .RelPermalink }}" defer></script>
+{{ end }}

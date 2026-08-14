@@ -150,17 +150,111 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, transform 0.25s ease;
 }
 
-.edu-turning-point:hover .edu-turning-point__card,
-.exp-highlight:hover .exp-highlight__card {
+.resume-reveal-slot.is-inview.edu-turning-point:hover .edu-turning-point__card,
+.resume-reveal-slot.is-inview.exp-highlight:hover .exp-highlight__card {
   border-color: rgba(45, 212, 191, 0.45);
   box-shadow: 0 4px 16px rgba(45, 212, 191, 0.12);
   transform: translateX(0.25rem);
 }
 
-.dark .edu-turning-point:hover .edu-turning-point__card,
-.dark .exp-highlight:hover .exp-highlight__card {
+.dark .resume-reveal-slot.is-inview.edu-turning-point:hover .edu-turning-point__card,
+.dark .resume-reveal-slot.is-inview.exp-highlight:hover .exp-highlight__card {
   border-color: rgba(45, 212, 191, 0.5);
   box-shadow: 0 4px 18px rgba(45, 212, 191, 0.14);
+}
+
+/* Scroll reveal: cards fade up, line draws, icons pop */
+.resume-timeline-line {
+  transform: scaleY(var(--reveal-progress, 0));
+  transform-origin: top center;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.resume-reveal-card {
+  opacity: 0;
+  transform: translateY(1.75rem);
+  transition:
+    opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.25s ease;
+}
+
+.resume-reveal-slot.is-inview .resume-reveal-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.resume-reveal-slot.is-inview.group:hover .resume-reveal-card.tl-yellow-card {
+  transform: translateX(0.25rem);
+}
+
+.resume-reveal-icon {
+  opacity: 0;
+  transform: scale(0.35);
+  transform-origin: center center;
+}
+
+.resume-reveal-slot.is-inview .resume-reveal-icon {
+  animation: resume-icon-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes resume-icon-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.35);
+  }
+  65% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Highlighter paint L→R after card reveal */
+.resume-reveal-slot .high-mark.high-mark--red {
+  background-size: 0% 100%;
+  background-position: left center;
+  transition: background-size 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.7s;
+}
+
+.resume-reveal-slot.is-inview .high-mark.high-mark--red {
+  background-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-timeline-line {
+    transform: scaleY(1);
+    transition: none;
+  }
+
+  .resume-reveal-card {
+    opacity: 1;
+    transform: none;
+    transition:
+      border-color 0.25s ease,
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .resume-reveal-icon {
+    opacity: 1;
+    transform: none;
+  }
+
+  .resume-reveal-slot.is-inview .resume-reveal-icon {
+    animation: none;
+  }
+
+  .resume-reveal-slot .high-mark.high-mark--red {
+    background-size: 100% 100%;
+    transition: none;
+  }
 }
 
 /* Mint accents (non-highlight / non-turning-point items) */

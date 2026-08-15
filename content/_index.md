@@ -197,8 +197,8 @@ sections:
           title: MultiAgent
         - id: schedule
           title: Schedule
-        - id: trashbin
-          title: TrashBin
+        - id: study
+          title: Study
     design:
       background:
         color:

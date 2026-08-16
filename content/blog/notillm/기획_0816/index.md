@@ -16,6 +16,7 @@ diagram: true
 ## backend/app/pending.py 추가
 
 {{% high_mark %}}**Sequence Diagram**{{% /high_mark %}}
+- 이전 대화에서 사용자 질문 의도 파악 불가로 <u>재질문</u> + <u>사용자 보충 질문 추가</u>하는 경우
 ```mermaid
 sequenceDiagram
     participant U as 사용자

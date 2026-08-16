@@ -9,4 +9,9 @@ authors:
 featured: true
 ---
 
-> [!warning] 강의 듣고, 내용 정리 예정
+### 배울 내용
+- 의사결정 Framework (PPDAC)
+  - P: Problem. Business Question
+  - 
+
+> [!Note] 작성 예정. [PST1001] 부터 수강 시작.

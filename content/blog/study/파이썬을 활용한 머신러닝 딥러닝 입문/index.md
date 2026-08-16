@@ -33,4 +33,6 @@ featured: true
 
 ## 딥러닝에 사용되는 파이썬 라이브러리
 
+- `Scikit-Learn`, `Tensorflow`, `Keras` (Tensorflow에 대한 High-Level API. 더 쉽게 쓰기 위함), `Pytorch`
+
 > [!Note] 작성 예정

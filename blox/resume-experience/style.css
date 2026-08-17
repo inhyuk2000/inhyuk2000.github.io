@@ -106,13 +106,31 @@
 
 @media (max-width: 1023px) {
   .resume-exp-edu-grid {
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
   }
 
+  /* Same rail elements as desktop; JS sets top/left/height to icon column */
   .resume-rail {
-    display: none;
+    display: block;
+    position: absolute;
+    width: 0.125rem;
+    margin: 0;
+    padding: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .resume-rail .exp-timeline-line,
+  .resume-rail .edu-timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 0.125rem;
+    margin-left: -0.0625rem;
   }
 
   .resume-title-exp {
@@ -130,6 +148,11 @@
 
   .resume-cell--edu {
     order: 4;
+  }
+
+  .resume-cell {
+    position: relative;
+    z-index: 1;
   }
 
   .resume-cell .resume-slot {

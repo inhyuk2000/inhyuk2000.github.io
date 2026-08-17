@@ -121,6 +121,76 @@
     });
   }
 
+  function isResumeDesktop() {
+    return window.matchMedia("(min-width: 1024px)").matches;
+  }
+
+  /** Icon column anchor (avoids scaled .resume-reveal-icon bounds). */
+  function resumeRailAnchor(slot) {
+    var direct = slot.querySelector(":scope > .absolute");
+    if (direct) return direct;
+    return slot.querySelector(".resume-reveal-icon") || slot;
+  }
+
+  /** Position shared timeline rails over stacked cards on mobile (1-col). */
+  function layoutResumeRails(root, slots) {
+    var grid = root.querySelector(".resume-exp-edu-grid");
+    if (!grid) return;
+
+    var railEls = {
+      exp: root.querySelector(".resume-rail-exp"),
+      edu: root.querySelector(".resume-rail-edu"),
+    };
+
+    if (isResumeDesktop()) {
+      Object.keys(railEls).forEach(function (key) {
+        var el = railEls[key];
+        if (!el) return;
+        el.style.top = "";
+        el.style.left = "";
+        el.style.height = "";
+        el.style.width = "";
+      });
+      return;
+    }
+
+    var gridRect = grid.getBoundingClientRect();
+
+    ["exp", "edu"].forEach(function (key) {
+      var railEl = railEls[key];
+      if (!railEl) return;
+
+      var railSlots = slots.filter(function (slot) {
+        return (slot.getAttribute("data-resume-rail") || "exp") === key;
+      });
+      if (!railSlots.length) {
+        railEl.style.height = "0px";
+        return;
+      }
+
+      var firstAnchor = resumeRailAnchor(railSlots[0]);
+      var lastSlot = railSlots[railSlots.length - 1];
+      var lastAnchor = resumeRailAnchor(lastSlot);
+
+      var firstRect = firstAnchor.getBoundingClientRect();
+      var lastAnchorRect = lastAnchor.getBoundingClientRect();
+      var lastSlotRect = lastSlot.getBoundingClientRect();
+
+      var top = firstRect.top + firstRect.height / 2 - gridRect.top;
+      var bottom =
+        railSlots.length === 1
+          ? lastSlotRect.bottom - gridRect.top - 16
+          : lastAnchorRect.top + lastAnchorRect.height / 2 - gridRect.top;
+      var left = firstRect.left + firstRect.width / 2 - gridRect.left;
+      var height = Math.max(0, bottom - top);
+
+      railEl.style.top = top + "px";
+      railEl.style.left = left + "px";
+      railEl.style.height = height + "px";
+      railEl.style.width = "2px";
+    });
+  }
+
   function initResumeReveal(root) {
     if (root.dataset.revealReady === "1") return;
     root.dataset.revealReady = "1";
@@ -160,6 +230,31 @@
       var idx = parseInt(slot.getAttribute("data-reveal-index") || "0", 10);
       setLineProgress(rail, idx);
     }
+
+    function syncRails() {
+      layoutResumeRails(root, slots);
+    }
+
+    var resizeTimer = null;
+    function onResize() {
+      if (resizeTimer) window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(syncRails, 80);
+    }
+
+    window.addEventListener("resize", onResize);
+    if (typeof ResizeObserver !== "undefined") {
+      var grid = root.querySelector(".resume-exp-edu-grid");
+      if (grid) {
+        var ro = new ResizeObserver(function () {
+          syncRails();
+        });
+        ro.observe(grid);
+      }
+    }
+
+    requestAnimationFrame(function () {
+      syncRails();
+    });
 
     if (prefersReducedMotion()) {
       slots.forEach(function (slot) {

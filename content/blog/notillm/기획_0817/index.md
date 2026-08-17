@@ -21,6 +21,31 @@ diagram: true
   - 하지만 사용자 명령이 만약 **안녕**, **ㅎ2**, **ㅎㅎ** 라면? {{% high_mark %}}**굳이 모든 명령들을 전부 `4o` 모델로 처리할 필요가 있을까??**{{% /high_mark %}}
   - 사용자의 명령을 `중요도 낮음`, `약간 중요`, `매우 중요` 등으로 나눠서, 이에 맞는 수준의 모델로 라우팅해주는 게 좋을 거 같음.
 
+```mermaid
+flowchart TD
+    START([사용자 입력<br/>prompt + pending 플래그]) --> R{의도 라우터<br/>gpt-4o-mini}
+
+    R -->|잡담 / 인사 / ㅎㅎ| S[단순 응답<br/>gpt-4o-mini<br/>tool 없음]
+    S --> END1([END<br/>채팅 응답만])
+
+    R -->|알림 규칙 관련| P{pending?}
+
+    P -->|false| E[규칙 추출<br/>gpt-4o<br/>extract_notification_rule]
+    P -->|true| C[재질문 후속 분류<br/>gpt-4o-mini]
+
+    C -->|supplement<br/>보충| M[이전 명령 + 보충<br/>합친 prompt]
+    C -->|new_command<br/>새 명령| N[이번 prompt만]
+
+    M --> E
+    N --> E
+
+    E -->|tool 성공| OK[confirm 문장<br/>gpt-4o]
+    E -->|정보 부족| ASK[재질문 메시지<br/>ok=false]
+
+    OK --> END2([END<br/>규칙 저장])
+    ASK --> END3([END<br/>앱이 pending 유지])
+```
+
 
 ## 참조 연구들
 

@@ -23,37 +23,37 @@ diagram: true
     </tr>
   </thead>
   <tbody>
-    <tr style="background-color: rgba(255, 215, 0, 0.18);">
+    <tr style="background-color: rgba(81, 255, 0, 0.18);">
       <td style="text-align:center;"><small><strong>1</strong></small></td>
       <td><small>현재 시스템 Baseline 고정</small></td>
       <td><small>v1 구조/성능 기준</small></td>
       <td><small>System Design</small></td>
     </tr>
-    <tr style="background-color: rgba(255, 215, 0, 0.18);">
+    <tr style="background-color: rgba(81, 255, 0, 0.18);">
       <td style="text-align:center;"><small><strong>2</strong></small></td>
       <td><small>Evaluation Dataset 구축</small></td>
       <td><small>Ground Truth Dataset</small></td>
       <td><small>LLM Evaluation</small></td>
     </tr>
-    <tr style="background-color: rgba(255, 215, 0, 0.18);">
+    <tr style="background-color: rgba(81, 255, 0, 0.18);">
       <td style="text-align:center;"><small><strong>3</strong></small></td>
       <td><small>자동 Evaluation 구현</small></td>
       <td><small>평가 코드 + 지표</small></td>
       <td><small>AI Engineering</small></td>
     </tr>
-    <tr style="background-color: rgba(30, 194, 209, 0.18)">
+    <tr style="background-color: rgba(255, 215, 0, 0.18);">
       <td style="text-align:center;"><small><strong>4</strong></small></td>
       <td><small>Error Analysis</small></td>
       <td><small>실패 유형/원인</small></td>
       <td><small>Problem Solving</small></td>
     </tr>
-    <tr style="background-color: rgba(30, 194, 209, 0.18)">
+    <tr style="background-color: rgba(255, 215, 0, 0.18);">
       <td style="text-align:center;"><small><strong>5</strong></small></td>
       <td><small>구조/Prompt 개선</small></td>
       <td><small>v2</small></td>
       <td><small>LLM Engineering</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(255, 0, 0, 0.18);">
       <td style="text-align:center;"><small><strong>6</strong></small></td>
       <td><small>LangGraph 도입 검토</small></td>
       <td><small>Stateful Agent</small></td>

@@ -1,7 +1,7 @@
 ---
 title: "파이썬을 활용한 머신러닝 딥러닝 입문"
 date: 2026-08-16
-summary: "인프런 강의 및 정리"
+summary: "실습 준비 및 머신 러닝 개요"
 tags:
   - ML
   - DL
@@ -34,5 +34,3 @@ featured: true
 ## 딥러닝에 사용되는 파이썬 라이브러리
 
 - `Scikit-Learn`, `Tensorflow`, `Keras` (Tensorflow에 대한 High-Level API. 더 쉽게 쓰기 위함), `Pytorch`
-
-> [!Note] 작성 예정

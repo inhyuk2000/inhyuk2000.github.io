@@ -41,7 +41,7 @@ diagram: true
       <td><small>평가 코드 + 지표</small></td>
       <td><small>AI Engineering</small></td>
     </tr>
-    <tr style="background-color: rgba(255, 215, 0, 0.18);">
+    <tr style="background-color: rgba(81, 255, 0, 0.18);">
       <td style="text-align:center;"><small><strong>4</strong></small></td>
       <td><small>Error Analysis</small></td>
       <td><small>실패 유형/원인</small></td>
@@ -59,19 +59,19 @@ diagram: true
       <td><small>Stateful Agent</small></td>
       <td><small>Agent Engineering</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(255, 215, 0, 0.18);">
       <td style="text-align:center;"><small><strong>7</strong></small></td>
       <td><small>재평가 + 통계 검증</small></td>
       <td><small>v1 vs v2 결과</small></td>
       <td><small>Experimentation</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(255, 0, 0, 0.18);">
       <td style="text-align:center;"><small><strong>8</strong></small></td>
       <td><small>Reliability 강화</small></td>
       <td><small>Retry/Fallback/Validation</small></td>
       <td><small>Production AI</small></td>
     </tr>
-    <tr>
+    <tr style="background-color: rgba(255, 215, 0, 0.18);">
       <td style="text-align:center;"><small><strong>9</strong></small></td>
       <td><small>실제 사용자 배포</small></td>
       <td><small>테스트 사용자</small></td>

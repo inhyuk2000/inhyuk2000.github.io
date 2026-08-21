@@ -51,6 +51,14 @@ flowchart TD
 
 ### AWS App Runner 운영 종료 이슈
 - 이로 인해, **Amazon Elastic Container Service로 배포**를 진행함. (Tokyo)
+- 배포 이후, `/health` 확인 완료
+
+```json
+{
+  "status": "ok",
+  "promptEngine": "v3"
+}
+```
 
 ## {{% high_mark %}}**중간 점검**{{% /high_mark %}}
 

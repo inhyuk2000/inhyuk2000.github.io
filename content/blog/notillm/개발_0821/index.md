@@ -1,7 +1,7 @@
 ---
-title: "최종 버전 확정"
+title: "최종 버전 확정 및 초안 배포"
 date: 2026-08-21
-summary: "Version 03"
+summary: "Version 03 확정 및 중간 점검 과정"
 tags:
   - NotiLLM
   - Evaluation
@@ -13,7 +13,7 @@ featured: true
 diagram: true
 ---
 
-### Version 03 전체 과정
+## Version 03 전체 과정
 
 ```mermaid
 flowchart TD
@@ -45,3 +45,21 @@ flowchart TD
 > 앱 + 라이브러리 + 실행 방법을 상자에 넣어, 어디든 같은 방식으로 돌리게 하는 도구임.
 
 현재 V3는 `sentence-transformers`와 같은 것들로 인해 {{% high_mark %}}**의존성이 무거워**{{% /high_mark %}}, EC2에 수동 pip보다는 **Docker로 묶는 것**이 좋다고 결정함.
+
+우선 `Docker` + `AWS ECR` + `App Runner`를 활용해서, 1차적으로 배포를 먼저 진행함.
+- 이후 **부하 테스트** 진행 후, 수정 사항 반영 후 재배포할 예정임.
+
+### AWS App Runner 운영 종료 이슈
+- 이로 인해, **Amazon Elastic Container Service로 배포**를 진행함. (Tokyo)
+
+## {{% high_mark %}}**중간 점검**{{% /high_mark %}}
+
+### NotiLLM 관련
+- {{% high_mark %}}**전체 소스코드에 주석 남기면서 과정을 하나하나 다시 뜯어보는 과정**{{% /high_mark %}}이 필요함
+- {{% high_mark %}}**부하 테스트**{{% /high_mark %}} 반드시 진행할 것.
+- 아직, {{% high_mark %}}**눈에 띄는 인사이트를 기반으로 한 발전 과정이 안보임**{{% /high_mark %}}. 너무 뻔하고 흔한 과정들로 발전시킨 것 같아, 해당 과정에 대한 고민도 필요할 것 같음.
+
+### 기타
+- {{% high_mark %}}**포스터 홀 개선 및 추가**{{% /high_mark %}}할 것.
+- 코딩테스트 및 서류 및 면접 준비
+- 통계 및 머신러닝 관련 공부도 지속적으로 진행.

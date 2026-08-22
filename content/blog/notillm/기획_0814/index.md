@@ -1,7 +1,7 @@
 ---
 title: "baseline_v1_auto_map Evaluation 및 개선"
 date: 2026-08-14
-summary: "Evaluation에서 확인된 부분을 기반으로 코드 수정"
+summary: "Error Analysis & 구조/Prompt 개선"
 tags:
   - NotiLLM
   - Evaluation
@@ -12,6 +12,8 @@ authors:
 featured: true
 diagram: true
 ---
+
+**Evaluation에서 확인된 부분을 기반으로 코드 수정**
 
 ![LangSmith](./image.png)
 LangSmith를 기반으로 53문항의 테스트를 진행했고, 개선 수행.

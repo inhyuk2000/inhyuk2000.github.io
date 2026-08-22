@@ -1,7 +1,7 @@
 ---
-title: "LangGraph 도입 검토 및 관련 연구"
-date: 2026-08-16
-summary: "LangGraph 도입해야 한다면 내 프로젝트 서비스를 최적화시켜줄 수 있는 최적의 참조 논문은..?"
+title: "LangGraph 도입 검토 및 데이터셋 설계"
+date: 2026-08-17
+summary: "LangGraph 도입 검토 & Evaluation Dataset 구축"
 tags:
   - NotiLLM
   - Evaluation
@@ -77,64 +77,22 @@ flowchart TD
     FAIL --> END4([END<br/>pending 해제])
 ```
 
-## LangGraph 도입을 통해 `Routing 버전`을 추가했을 때, 확인해야 하는 것들
+### LangGraph 도입 시 (`Routing 버전`을 추가), 확인 사항
 - A버전에 비해 B버전에서, **정확도**가 많이 떨어지지 않는지
 - **비용 및 속도**가 얼마나 줄어드는지
 
 
-## Dataset 기준 설정
+## Evaluation Dataset 구성 기준
+`Evaluation Dataset`이 특정 유형에 편중되지 않도록, 주요 평가 축을 `intent`, `time`, `target`으로 나누고 각 카테고리 별 최소 케이스 수를 정의했습니다.
 
-### 축 A. `intent`
-정답 `outputs.ok`와 `mute/allow`로 결정
+- 전체 Dataset: **85 cases**
+- **주요 카테고리 별 최소 5 cases 이상** 확보
+- `ok=true` 케이스에서는 `time`, `target` 세부 유형이 모두 포함되도록 구성
 
-| 값 | 조건 | 예시 |
-|---|---|---|
-| `mute` | `ok=true`, `targetFixed.mute=true` | "카톡 5분 받지마" |
-| `allow` | `ok=true`, `targetFixed.mute=false` | "1시간 카톡만 받아" |
-| `reject` | `ok=false` | "카톡만 받아줘" (시간 없음) |
+### Coverage 확인
 
-```json
-"metadata": { "intent": "reject" }
-```
-
-### 축 B. `time`
-정답 `condition`으로 결정
-
-| 값 | 조건 | 예시 |
-|---|---|---|
-| `duration` | `recurrence=none`, N분/N시간 구간 | "30분 받지마" |
-| `until_absolute` | 특정 시각까지 | "오후 6시까지" |
-| `relative_delay` | 시작이 "N분 후" | "3분 후부터 5분동안" |
-| `daily` | `recurrence=daily` | "매일 밤 10시~6시" |
-| `weekly` | `recurrence=weekly` | "월수금 2~5시" |
-
-- **규칙**: `recurrence`가 `daily/weekly`면 `duration`이 아님.
-- 같은 문장이라도 currentTime만 다르면 별도 문항
-
-### 축 C. `target`
-정답 `targetFixed`으로 결정
-
-| 값 | 조건 | 예시 |
-|---|---|---|
-| `all` | `name`, `packages`, `content` 모두 빈 배열 | "모든 알림 받지마" |
-| `single_app` | 앱 1개 | "카톡 받지마" |
-| `multi_app` | 앱 2개 이상 | "카톡이랑 인스타만" |
-| `content` | `content`만 있거나 content가 핵심 | "광고 알림 받지마" |
-| `app_and_content` | 앱 + 키워드 둘 다 | "카톡에서 게임 관련만" |
-
-- 별도 `alias` 축은 안 써도 됨
-
-### 축 D. `route`
-> [!note] 아직 미구현
-추출 정답이 아니라 **“이 문항에 어떤 모델을 쓰는 게 맞나”** 라벨.
-
-| 값 | 규칙 (우선순위 위에서 아래) |
-|---|---|
-| `hard` | `time` ∈ {`daily`, `weekly`} 또는 overnight 회차 |
-| `medium` | `intent=reject` 또는 `target` ∈ {`multi_app`, `app_and_content`, `content`} 또는 `until_absolute` / `relative_delay` |
-| `easy` | 그 외 (`duration` + `single_app` / `all`, `ok=true`) |
-
-### 데이터셋 정리
+> [!note] 모든 주요 카테고리에서 최소 5개 이상의 평가 케이스를 확보하여, 특정 입력 유형이 Dataset에서 완전히 누락되는 것을 방지했습니다.
+ 
 | 축                           | 값                 | 개수 | 기준 |  상태 |
 | --------------------------- | ----------------- | -: | -: | :-: |
 | **A. intent**               | `mute`            | 44 | ≥5 |  OK |
@@ -151,10 +109,11 @@ flowchart TD
 | **C. target**               | `content`         |  6 | ≥5 |  OK |
 | **C. target**               | `app_and_content` |  7 | ≥5 |  OK |
 
+---
 
+## References
 
-
-## 참조 연구들
+**LangGraph 도입해야 한다면 내 프로젝트 서비스를 최적화시켜줄 수 있는 최적의 참조 논문은..?**
 
 1. [ReAct](https://arxiv.org/abs/2210.03629?utm_source=chatgpt.com)
   - `Reasoning`과 `Action`을 번갈아 수행하면서 외부 환경 / 도구와 상호작용하는 구조

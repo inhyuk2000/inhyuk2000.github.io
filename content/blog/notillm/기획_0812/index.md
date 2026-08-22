@@ -1,7 +1,7 @@
 ---
 title: "LangSmith를 활용한 Evaluation 설계"
 date: 2026-08-12
-summary: "Phoenix 기반 DeepLearningAI의 강의 코드를 참조해, 동일한 로직을 LangSmith로 구현함"
+summary: "자동 Evaluation 구현"
 tags:
   - NotiLLM
   - Evaluation
@@ -11,6 +11,8 @@ authors:
 featured: true
 diagram: true
 ---
+
+**Phoenix 기반 DeepLearningAI의 강의 코드를 참조해, 동일한 로직을 LangSmith로 구현함**
 
 ## Evaluation 설명
 기존 시스템은 Kotlin 기반 Android 앱 내부의 PromptEngine.kt에서 자연어 입력을 LLM에 전달하고, Function Calling 결과를 바탕으로 알림 규칙을 생성하는 구조였다.

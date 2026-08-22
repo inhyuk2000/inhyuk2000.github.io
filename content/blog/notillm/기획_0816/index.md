@@ -1,7 +1,7 @@
 ---
 title: "사용자 재질문 처리 전략"
 date: 2026-08-16
-summary: "pending flag를 활용해 재질문 처리용 LLM 추가"
+summary: "구조/Prompt 개선"
 tags:
   - NotiLLM
   - Evaluation
@@ -12,6 +12,8 @@ authors:
 featured: true
 diagram: true
 ---
+
+**pending flag를 활용해 재질문 처리용 LLM 추가**
 
 ## backend/app/pending.py 추가
 

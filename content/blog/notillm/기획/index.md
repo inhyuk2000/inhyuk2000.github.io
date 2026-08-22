@@ -1,7 +1,7 @@
 ---
-title: "Architecture 설계 및 Evaluation 설계"
+title: "전체 NotiLLM Schedule 및 Architecture 설계"
 date: 2026-08-11
-summary: "NotiLLM 발전!"
+summary: "기획"
 tags:
   - NotiLLM
   - Evaluation
@@ -12,6 +12,10 @@ diagram: true
 ---
 
 ## Schedule
+
+단순히 기능을 추가하는 방식이 아니라, **측정 가능한 기준을 세우고 반복적으로 개선하는 과정**을 중심으로 프로젝트를 진행했습니다.
+
+아래와 같이 단순한 LLM 기능 구현을 넘어, `Evaluation` - `Optimization` - `Validation` - `Production` 으로 이어지는 AI Engineering 전 과정을 경험하는 것을 목표로 합니다.
 
 <table>
   <thead>
@@ -98,8 +102,11 @@ diagram: true
   </tbody>
 </table>
 
-## Baseline Architecture
-* {{% high_mark %}}**Mermaid**{{% /high_mark %}} 목적 : Evaluation 시, {{% high_mark %}}**어느 Component에서 문제가 발생하는지 특정**{{% /high_mark %}}하기 위함
+본격적인 `Evaluation`을 진행하기에 앞서서, 전체 `Architecture`를 먼저 설계해 어느 부분을 평가할 지에 대한 계획을 수립했습니다.
+
+## Baseline Ver.1 Architecture
+- {{% high_mark %}}**Mermaid**{{% /high_mark %}} 목적 : Evaluation 시, {{% high_mark %}}**어느 Component에서 문제가 발생하는지 특정**{{% /high_mark %}}하기 위함
+- `ChatGPT-4o` 모델로 `Function Calling` 전체 처리
 
 ```mermaid
 flowchart TB
@@ -164,9 +171,16 @@ flowchart TB
   class db dbNode
 ```
 
-## Evaluation
-* 목적 : NotiLLM이 실제로 얼마나 잘 작동하는지를 객관적으로 측정하고, {{% high_mark %}}**어디가 부족한지 찾아 개선**{{% /high_mark %}}하기 위함 
-  * 참고 자료 : [**DeepLearningAI**](https://www.deeplearning.ai/courses/evaluating-ai-agents?utm_source=chatgpt.com)
+## 평가 방식
+
+> [!Question] 각 Tools (`extract_notification_condition`, `extract_mute_target`, `extract_allow_target`) 에 따라 **어떤 평가 방식**을 사용해야 할까?
+
+지금 평가 대상이 **자유로운 자연어 답변이 아니라 스키마가 정해진 구조화된 JSON**이고, 이미 **Ground Truth**를 만들 수 있다. 그래서 굳이 또 다른 LLM의 주관적 판단을 끼워 넣을 필요가 없다고 판단했습니다.
+
+### 평가 방식 선정
+> [!check] `Code-based evals` 선정
+
+`Function Calling`의 출력이 정해진 `JSON Schema`를 따르는 **구조화된 데이터**이므로, 각 필드를 `Ground Truth`와 직접 비교하는 {{% high_mark %}}**Code-based Eval 방식**{{% /high_mark %}}을 사용하기로 결정했습니다.
 
 ### Function Calling이 현재 출력하는 JSON 필드
 
@@ -319,6 +333,8 @@ extract_allow_target
 
 </div>
 
-## Evaluation 방식 고민
-- 각 Tools (`extract_notification_condition`, `extract_mute_target`, `extract_allow_target`) 에 따라 **어떤 평가 방식**을 사용해야 할까?
-  - `LLM-as-a-Judge`, `Code-based evals`, `Human annotations` 
+---
+
+## References
+
+* [**DeepLearningAI**](https://www.deeplearning.ai/courses/evaluating-ai-agents?utm_source=chatgpt.com)

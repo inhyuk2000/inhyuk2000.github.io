@@ -1,7 +1,7 @@
 ---
 title: "Version 간 결과 비교/분석"
 date: 2026-08-20
-summary: "LangGraph를 사용하기 이전(전부 4o모델) vs 모델 분기 비교 실험"
+summary: "Version 간 평가"
 tags:
   - NotiLLM
   - Evaluation
@@ -12,6 +12,8 @@ authors:
 featured: true
 diagram: true
 ---
+
+**LangGraph를 사용하기 이전(전부 4o모델) vs 모델 분기 비교 실험**
 
 ### 결과
 | Metric | Baseline | Routing V2 | Change (%) |
